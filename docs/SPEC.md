@@ -62,9 +62,24 @@
 | S5 | 临床库条数三处一致（manifest / jsonl / sqlite），sha256 可复算 | `scripts/fetch-anal-trials-2026.mjs` 重跑 + 校验脚本 |
 | S6 | schema 可执行、列与演示库一致、冻结哈希可校验 | `npm run check` |
 | S7 | 文案红线 0 命中 | `scripts/check-wording.mjs` |
+| S8 | 开发版与原型**视图逐字符一致**（不许出现第二套 UI） | `test/ui-parity.test.mjs`：13 视图 × 2 档案 × 38 个二级页 = 78 组比对 |
+| S9 | 开发版走 `/api/anal-cancer/bootstrap`，且在 `file://` 之外也能起来 | `test/server.test.mjs` + 无头打开 `http://127.0.0.1:5173/` 与 `/api/anal-cancer/ui/index.html` 两种路径 |
+| S10 | 面板参数只有一处来源（`lib/layout.js`），客户端字面量副本与之一致 | `test/ui-parity.test.mjs` 第三项断言 |
+
+## 5.1 阶段 3.2（开发版）交付说明
+
+- **同一份前端**：`public/app.js` 是从 `prototypes/v0.2/app.js` 派生的一支，视图函数未改写；
+  唯一差异是数据入口（`window.DEMO_DATA` → `fetch('/api/anal-cancer/bootstrap')`）与 `APP_INFO.channel: 'dev'`。
+  由 S8 守住院线，任何改写导致的偏移都会在 CI 里逐字符报出。
+- **数据来源可追溯**：`dsh/readmodels.js` 返回体带 `meta.source: 'demo-fixture'`，
+  并附 `generatedAt`、时间窗与免责声明，不假装在读真实资料目录。
+- **两种打开方式**：`npm start`（默认 5173，页面在 `/`、接口在 `/api/*`）；
+  装进 Desktop 后页面在 `/api/anal-cancer/ui/index.html`，接口在 `/api/anal-cancer/*`。
+  `public/app.js` 按自身路径推导 `API_BASE`，两种都能用。
+- **仍未做**：真实资料目录读写、AI 会话、装机后的宿主验证（属阶段 3.3）。
 
 ## 6. 闸口
 
-- **G1（需求）**：本文件 + `DIFF-MATRIX` + `PATIENT-FLOW` 由用户确认页面范围与优先级 → 待签。
-- **G2（原型）**：`prototypes/v0.2/` 由用户逐页确认 → 待签。G2 未签不写开发版 `public/`。
-- **G3（数据模型）**：`schema/0001_initial.sql` + `SCHEMA.md` 确认后才允许写入真实资料目录 → 待签。
+- **G1（需求）**：本文件 + `DIFF-MATRIX` + `PATIENT-FLOW` 由用户确认页面范围与优先级 → **2026-10-21 确认**（13 页、心理页独立、肛周皮肤独立、淋巴结口径按指南修正）。
+- **G2（原型）**：`prototypes/v0.2/` 由用户逐页确认 → **2026-10-21 确认**（心理页三个二级页与文案尺度「确认认可」），授权进阶段 3.2。
+- **G3（数据模型）**：`schema/0001_initial.sql` + `SCHEMA.md` 确认后才允许写入真实资料目录 → schema 已冻结、四契约已落文档，**真实库写入仍未开闸**（演示库 `demo/anal-cancer.sqlite` 属模拟资料）。

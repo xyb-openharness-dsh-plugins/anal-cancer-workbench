@@ -1,6 +1,6 @@
 {
   "name": "@xyb-community/anal-cancer-workbench",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "本机优先的肛管癌（肛管鳞癌）放化疗副作用、肠道与排粪功能、造口生活与复查准备工作台",
   "private": true,
   "type": "module",
@@ -14,12 +14,17 @@
   "files": [
     "dsh",
     "lib",
+    "public",
+    "schema",
+    "scripts",
     "assets",
     "cordis.patch.yml",
     "README.md",
     "NOTICE.md"
   ],
   "scripts": {
+    "start": "node scripts/dev-server.mjs",
+    "build:version": "node scripts/build-version.mjs",
     "demo": "node demo/build-demo-data.mjs",
     "trials": "node scripts/fetch-anal-trials-2026.mjs",
     "trials:excerpt": "node scripts/build-trials-excerpt.mjs",
@@ -29,7 +34,8 @@
     "check:columns": "node scripts/check-demo-columns.mjs",
     "check:version": "node scripts/check-version.mjs",
     "check:package": "node scripts/check-workbench-package.mjs .",
-    "check": "node scripts/check-syntax.mjs && node scripts/check-schema.mjs && node scripts/check-wording.mjs && node scripts/check-demo-columns.mjs && node scripts/check-version.mjs && node scripts/check-workbench-package.mjs .",
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.mjs",
+    "check": "node scripts/build-version.mjs --check && node scripts/check-syntax.mjs && node scripts/check-schema.mjs && node scripts/check-wording.mjs && node scripts/check-demo-columns.mjs && node --disable-warning=ExperimentalWarning --test test/*.test.mjs && node scripts/check-version.mjs && node scripts/check-workbench-package.mjs .",
     "pack:check": "npm pack --dry-run"
   },
   "dsh": {

@@ -1015,13 +1015,18 @@ function copyText(txt) {
   else toast('当前环境不支持自动复制');
 }
 
-/* boot：buildData 先于 init，bootFail 兜底不白屏 */
-(function boot() {
-  try {
-    if (!D || !D.profiles?.length) throw new Error('demo data missing');
-    render();
-  } catch (err) {
-    $('#main').innerHTML = `<div class="notice danger"><b>原型数据没有加载成功</b><br>${esc(err.message)}。请确认 demo-data.js 与 index.html 在同一目录。</div>`;
-    console.error(err);
-  }
-})();
+/* boot：buildData 先于 init，bootFail 兜底不白屏。
+   parity 测试时把 globalThis.__WB_TEST__ 置真，跳过 boot 并把内部函数导出（数据已在加载时取自 window）。 */
+if (globalThis.__WB_TEST__) {
+  globalThis.__WB_TEST__ = { views, state, PAGES, SUBPAGES, APP_INFO };
+} else {
+  (function boot() {
+    try {
+      if (!D || !D.profiles?.length) throw new Error('demo data missing');
+      render();
+    } catch (err) {
+      $('#main').innerHTML = `<div class="notice danger"><b>原型数据没有加载成功</b><br>${esc(err.message)}。请确认 demo-data.js 与 index.html 在同一目录。</div>`;
+      console.error(err);
+    }
+  })();
+}

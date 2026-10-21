@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 /**
- * 版本号一致性校验。
- * 单一来源：仓库根 `VERSION`。核对 package.json 与原型 APP_INFO.version。
- * 原型快照版本固定为 FROZEN_PROTOTYPE（G2 签认过的视觉基准，不随开发版前移）。
- *
- * 用法：node scripts/check-version.mjs
+ * 版本号一致性校验。单一来源：仓库根 `VERSION`。
+ * 核对：package.json / lib/version.js / public/app.js / 原型 APP_INFO / README。
+ * 原型是 G2 基准，固定核对到 FROZEN_PROTOTYPE，不随开发版前移。
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -25,17 +23,20 @@ if (!SEMVER.test(version)) problems.push(`VERSION 不是合法语义化版本：
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 if (pkg.version !== version) problems.push(`package.json version=${pkg.version}，VERSION=${version}`)
 
-const appPath = join(root, 'prototypes/v0.2/app.js')
-if (existsSync(appPath)) {
-  const m = readFileSync(appPath, 'utf8').match(/APP_INFO\s*=\s*\{[^}]*version:\s*'([^']+)'/)
-  if (!m) problems.push('prototypes/v0.2/app.js 找不到 APP_INFO.version')
-  else if (m[1] !== FROZEN_PROTOTYPE) problems.push(`原型 APP_INFO.version=${m[1]}，应为冻结版本 ${FROZEN_PROTOTYPE}`)
-}
+const libVersion = readFileSync(join(root, 'lib/version.js'), 'utf8').match(/export const version = '([^']+)'/)
+if (!libVersion) problems.push('lib/version.js 读不到 version（先生成）')
+else if (libVersion[1] !== version) problems.push(`lib/version.js=${libVersion[1]}，VERSION=${version}`)
+
+const appVersion = readFileSync(join(root, 'public/app.js'), 'utf8').match(/APP_INFO\s*=\s*\{[^}]*version:\s*'([^']+)'/)
+if (!appVersion) problems.push('public/app.js 找不到 APP_INFO.version')
+else if (appVersion[1] !== version) problems.push(`public/app.js=${appVersion[1]}，VERSION=${version}`)
+
+const proto = readFileSync(join(root, 'prototypes/v0.2/app.js'), 'utf8').match(/APP_INFO\s*=\s*\{[^}]*version:\s*'([^']+)'/)
+if (!proto) problems.push('prototypes/v0.2/app.js 找不到 APP_INFO.version')
+else if (proto[1] !== FROZEN_PROTOTYPE) problems.push(`原型=${proto[1]}，应为冻结版本 ${FROZEN_PROTOTYPE}`)
 
 const readme = readFileSync(join(root, 'README.md'), 'utf8')
-if (!readme.includes(version) && !readme.includes(FROZEN_PROTOTYPE)) {
-  problems.push(`README.md 未出现版本号 ${version}（或冻结版 ${FROZEN_PROTOTYPE}）`)
-}
+if (!readme.includes(version)) problems.push(`README.md 未出现版本号 ${version}`)
 
 if (problems.length) {
   console.error('✗ 版本不一致：')

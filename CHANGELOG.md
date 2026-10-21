@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## 0.2.0 — 2026-10-21（阶段 3.2：开发版）
+
+G2 确认后进入开发版：一份前端、两种挂载、接口取数，视图代码与原型逐字符对齐。
+
+### 新增
+
+- `public/`：开发版前端（`index.html` / `app.js` / `style.css` / `shell.css` / `assets/brand/analpal-logo.jpg`）。
+  `app.js` 由原型派生，只有数据入口改为 `fetch(API_BASE + '/bootstrap')`；`API_BASE` 按自身路径推导，
+  `/`（dev-server）与 `/api/anal-cancer/ui/index.html`（Desktop）两种挂载都能用。
+- `dsh/readmodels.js`：读 `dsh/demo-data.json` + `dsh/trials-data.json`，返回体带 `meta.source = "demo-fixture"`。
+- `dsh/server.js`：零依赖 HTTP 层（`safeJoin` 防越界、未知 `/api/*` 回 JSON 404、只读 GET/HEAD）。
+- `dsh/index.js` 改为前缀注册 `/api/anal-cancer`（health / bootstrap / `/ui/*` 静态页），先过宿主鉴权回执。
+- `lib/layout.js`（面板参数唯一来源）、`lib/client.js`（iframe 标准分栏，`businessWidth 0.65`）、`lib/version.js`。
+- `scripts/dev-server.mjs`（`npm start`，默认 5173）、`scripts/build-version.mjs`。
+- `test/ui-parity.test.mjs`：13 视图 × 2 档案 × 38 个二级页 = 78 组逐字符比对；
+  面板参数与客户端字面量副本一致性断言。
+- `test/server.test.mjs`：bootstrap 结构（9 指标 / 10 试验 / 每档案 4 条淋巴结）与演示库不脱节、
+  `v_paired_delta` 缺侧 delta 为 NULL。
+- `package.json`：`start` / `build:version` / `test` / 各项 `check:*`，`files` 增 `public`、`schema`、`scripts`。
+
+### 变更
+
+- `npm run check` 链变为：版本一致 → 语法 → 冻结合同 → 文案红线 → 列一致性 → 单测 → 版本核对 → 包结构。
+- 版本 `0.1.1` → `0.2.0`；原型冻结在 `0.1.1`（G2 基准不随开发版前移）。
+
+### 测试
+
+- `npm run check` 全绿，5 个测试通过。
+- 无头核对：13 个一级页全可达、`bodyOverflow 0`、0 console error、0 请求失败；切档案可到"周先生"。
+- 前缀挂载核对：`/api/anal-cancer/ui/index.html` 下 `API_BASE` 正确回到 `/api/anal-cancer`，
+  `style.css` / `shell.css` / logo 均 200。
+
 ## 0.1.1 — 2026-10-21（首轮意见回改）
 
 按用户 2026-10-21 的四条确认修改。

@@ -1,0 +1,12 @@
+/* 开发版外壳：页面运行在 Desktop 业务区 iframe 内，只负责撑满可用高度、避免双滚动条。
+   业务样式全部在 style.css；这里不覆盖任何业务选择器。 */
+html, body { height: 100%; }
+body { margin: 0; background: var(--paper, #fcf9f5); }
+.workspace { min-height: calc(100% - 28px); }
+.work-area { min-height: 100%; display: flex; flex-direction: column; }
+.work-grid { flex: 1 1 auto; }
+/* 宿主窄分栏时顶栏允许换行，不产生横向滚动 */
+@media (max-width: 900px) {
+  .top-actions { flex-wrap: wrap; }
+  .top-note { display: none; }
+}

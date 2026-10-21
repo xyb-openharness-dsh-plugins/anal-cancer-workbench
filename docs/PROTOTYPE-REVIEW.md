@@ -1,12 +1,14 @@
 # HTML 交互原型确认记录
 
-状态：**部分确认（2026-10-21）**。用户确认了 4 项范围与口径；**逐页 G2 签认尚未完成**，G1/G3 仍待签。
+状态：**已确认（2026-10-21）**。用户确认页面范围、心理页独立与淋巴结口径，并授权进入阶段 3.2 开发版。
+原型冻结在 v0.1.1，作为 `test/ui-parity` 的比对基准；开发版（`public/`）版本号为 0.2.0。
 
 ## 本轮记录
 
 - HTML 实际路径、版本与 SHA-256：
   - `prototypes/v0.2/index.html` · v0.1.1 · `4b3af127c47c360a0c628889a7be7f6df46d3687e89b2ee421d379afcbf8b1bf`
-  - `prototypes/v0.2/app.js` · `d4db9ee7ce95281ebcf6ae5a123fd8f7c9ccafbd375d0c3c9c820b13cd98a0fe`
+  - `prototypes/v0.2/app.js` · `d671b8aa8b191efaeb50248070b39a5c6990ff9bb28bc6f3eae85168e19a9871`
+    （2026-10-21 追加 `globalThis.__WB_TEST__` 导出钩子用于 parity 测试，**视图函数未改动**，故视图可逐字符比对）
 - 当前 SPEC / 场景 / 数据模型版本：SPEC v0.1（13 页）· PATIENT-FLOW v0.1 · `schema/0001_initial.sql`（冻结 `12acb602…`）
 - 预览环境：macOS Chrome 1440×980（deviceScaleFactor 2）、`file://` 直接打开；无头实测 0 console error / 0 请求失败 / `scrollWidth === innerWidth`
 - 模拟数据 / 真实功能界限：全部患者资料为模拟（`demo-data.js`）；临床试验为登记摘录（`trials-data.js`）；不读写文件、不调用模型与宿主 API；所有保存动作仅为 toast

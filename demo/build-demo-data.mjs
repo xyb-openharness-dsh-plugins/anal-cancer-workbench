@@ -353,6 +353,8 @@ async function main() {
 
   const js = `/* 生成物：由 demo/build-demo-data.mjs 产出，不手改。${data.disclaimer} */\nwindow.DEMO_DATA = ${JSON.stringify(data, null, 1)};\n`
   await writeFile(join(ROOT, 'prototypes/v0.2/demo-data.js'), js)
+  // 开发版夹具：随包发布（prototypes/ 不进 files），readmodels 直接读这一份
+  await writeFile(join(ROOT, 'dsh/demo-data.json'), JSON.stringify(data, null, 1) + '\n')
   console.log(JSON.stringify({ db: dbPath, counts }))
 }
 

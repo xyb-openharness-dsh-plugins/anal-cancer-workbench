@@ -49,5 +49,7 @@ const out = rows.map(r => ({
 }))
 db.close()
 const meta = JSON.parse(await readFile(join(ROOT, 'research/anal-cancer/manifest.json'), 'utf8'))
-await writeFile(OUT, `/* 生成物：scripts/build-trials-excerpt.mjs 从 research/anal-cancer 摘录，不手改。数据截止 ${meta.cutoff}；登记状态未核实。 */\nwindow.TRIALS_DATA = ${JSON.stringify({ cutoff: meta.cutoff, total: meta.records, rows: out }, null, 1)};\n`)
+const payload = { cutoff: meta.cutoff, total: meta.records, rows: out }
+await writeFile(OUT, `/* 生成物：scripts/build-trials-excerpt.mjs 从 research/anal-cancer 摘录，不手改。数据截止 ${meta.cutoff}；登记状态未核实。 */\nwindow.TRIALS_DATA = ${JSON.stringify(payload, null, 1)};\n`)
+await writeFile(join(ROOT, 'dsh/trials-data.json'), JSON.stringify(payload, null, 1) + '\n')
 console.log(JSON.stringify({ out: OUT, rows: out.length, total: meta.records }))
