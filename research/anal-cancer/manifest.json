@@ -1,0 +1,89 @@
+{
+  "dataset": "anal-cancer-trials-2026-snapshot",
+  "cancer": "肛管癌（anal cancer / anal SCC）",
+  "cutoff": "2026-10-21",
+  "generated_at": "2026-10-21T04:18:18.949Z",
+  "source_channels": [
+    {
+      "source": "ctgov",
+      "query": "anal cancer",
+      "status": "ok",
+      "records_fetched": 340,
+      "records_kept": 221,
+      "pages": 4,
+      "note": "API v2 全量分页",
+      "fetched_at": "2026-10-21T04:18:18.949Z"
+    },
+    {
+      "source": "ctgov",
+      "query": "anal squamous cell carcinoma",
+      "status": "ok",
+      "records_fetched": 135,
+      "records_kept": 112,
+      "pages": 2,
+      "note": "API v2 全量分页",
+      "fetched_at": "2026-10-21T04:18:18.949Z"
+    },
+    {
+      "source": "ctgov",
+      "query": "anal canal carcinoma",
+      "status": "ok",
+      "records_fetched": 73,
+      "records_kept": 60,
+      "pages": 1,
+      "note": "API v2 全量分页",
+      "fetched_at": "2026-10-21T04:18:18.949Z"
+    },
+    {
+      "source": "ictrp",
+      "query": "anal cancer",
+      "status": "not_configured",
+      "note": "WHO ICTRP 在线通道本轮未接入：需 unified-trial-mcp 会话与凭据",
+      "records_fetched": 0,
+      "records_kept": 0,
+      "pages": 0,
+      "fetched_at": "2026-10-21T04:18:18.949Z"
+    },
+    {
+      "source": "chictr_online",
+      "query": "肛管癌",
+      "status": "not_configured",
+      "note": "ChiCTR 在线通道本轮未接入；离线语料仅覆盖胰腺癌，对本癌种无覆盖",
+      "records_fetched": 0,
+      "records_kept": 0,
+      "pages": 0,
+      "fetched_at": "2026-10-21T04:18:18.949Z"
+    },
+    {
+      "source": "chinadrugtrials",
+      "query": "肛管癌",
+      "status": "not_configured",
+      "note": "CDE 通道本轮未接入（含研究者 PI 字段，需 dry-run 同步）",
+      "records_fetched": 0,
+      "records_kept": 0,
+      "pages": 0,
+      "fetched_at": "2026-10-21T04:18:18.949Z"
+    }
+  ],
+  "records": 224,
+  "files": {
+    "jsonl": "trials-2026.jsonl",
+    "sqlite": "anal_cancer_trials_2026.sqlite"
+  },
+  "sha256": {
+    "trials-2026.jsonl": "b41a8314c9fbe7a447345cf80acaff828c68241296534e052d2df365b78d2839",
+    "anal_cancer_trials_2026.sqlite": "712f4bc4693deed25de8fb9d38433f65b52b7f1d09ce995e4998b1645bca8367"
+  },
+  "assertions": {
+    "jsonl_lines": 224,
+    "sqlite_records": 224
+  },
+  "notes": [
+    "登记状态，未核实；登记 ≠ 有效 ≠ 安全 ≠ 可入组",
+    "仅 ClinicalTrials.gov API v2 在线通道；其余三通道本轮未配置",
+    "检索式：cond in [anal cancer, anal squamous cell carcinoma, anal canal carcinoma]，限介入性研究，关键词相关性与排除词过滤",
+    "覆盖范围为 Cumulative 登记，不是“仅 2026 年首次公示”；2026-01-01 之后首次公示 14 条"
+  ],
+  "scope": "累计登记快照（不限首次公示年份），截至 cutoff 日；文件名中的 2026 指资料包快照年份",
+  "first_posted_2026": 14
+}

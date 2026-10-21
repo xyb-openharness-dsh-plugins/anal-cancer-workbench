@@ -1,0 +1,19 @@
+node_modules/
+*.tgz
+.DS_Store
+.env
+.env.*
+!.env.example
+_private/
+input/
+output/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+.workbuddy/
+.secrets/
+_private*
+# 资料包与演示库随仓库版本化（可复现），其余 sqlite 仍忽略
+!research/anal-cancer/*.sqlite
+!demo/demo-data.sqlite
