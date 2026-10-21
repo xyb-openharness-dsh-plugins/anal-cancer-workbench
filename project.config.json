@@ -1,0 +1,17 @@
+{
+  "packageName": "@xyb-community/anal-cancer-workbench",
+  "title": "小萌宝 · 肛管癌工作台",
+  "repository": "https://github.com/xyb-openharness-dsh-plugins/anal-cancer-workbench",
+  "description": "本机优先的肛管癌（肛管鳞癌）放化疗副作用、肠道与排粪功能、造口生活与复查准备工作台",
+  "slug": "anal-cancer-workbench",
+  "layoutMode": "business-first",
+  "businessWidth": 0.65,
+  "targetUsers": "肛管癌（肛管鳞状细胞癌）患者与家属，含根治性放化疗期间、治疗后随访期、造口术后与复发转移阶段",
+  "scenario": "把散落在病历、化验单、影像报告和出院小结里的信息整理成一条可回看的时间线，重点照看放化疗期间的皮肤/肠道/血液学毒性、排粪与控便功能、造口护理与复查准备",
+  "coreFlow": [
+    "建立档案并导入或手工录入最近一次就诊资料",
+    "在时间线上记录症状、化验与治疗事件，按 CTCAE 对照严重度",
+    "带着整理好的问题清单和趋势图去复诊"
+  ],
+  "completion": "复诊前能在一页里说清最近 3 个月发生了什么、哪些症状在加重、有哪些问题要问医生"
+}
