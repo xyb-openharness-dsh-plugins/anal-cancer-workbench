@@ -38,7 +38,9 @@ const METRIC_DEFS = [
   { key: 'anal_skin_grade', label: '肛周皮肤 RTOG 分级', kind: 'categorical', unit: null, scale: 'rtog_skin', color: '#C2410C', group: '皮肤与黏膜', order: 40 },
   { key: 'bowel_frequency', label: '排便次数', kind: 'numeric', unit: '次/日', color: '#3F6FA8', group: '肠道功能', order: 50 },
   { key: 'pain_nrs', label: '肛周疼痛 NRS', kind: 'numeric', unit: '分', color: '#A33B2B', group: '症状', order: 60 },
-  { key: 'stoma_output', label: '造口排出性状', kind: 'categorical', unit: null, scale: 'stoma_output', color: '#3F6FA8', group: '造口', order: 70 }
+  { key: 'stoma_output', label: '造口排出性状', kind: 'categorical', unit: null, scale: 'stoma_output', color: '#3F6FA8', group: '造口', order: 70 },
+  { key: 'phq9', label: '情绪自评 PHQ-9', kind: 'numeric', unit: '分', color: '#8A5A9E', group: '情绪与心理', order: 80 },
+  { key: 'gad7', label: '焦虑自评 GAD-7', kind: 'numeric', unit: '分', color: '#B06A8A', group: '情绪与心理', order: 90 }
 ]
 
 const P = (date, value, note = null) => ({ date, value, note })
@@ -77,7 +79,15 @@ function profileA() {
       { key: 'hemoglobin', points: [P('2026-04-24',128),P('2026-05-08',121),P('2026-05-22',115),P('2026-06-05',109),P('2026-06-19',105),P('2026-07-03',104),P('2026-07-17',108),P('2026-08-14',115),P('2026-09-11',121),P('2026-10-09',125)] },
       { key: 'anal_skin_grade', points: [P('2026-05-08',0),P('2026-05-22',1),P('2026-06-05',2),P('2026-06-19',3),P('2026-07-03',2),P('2026-07-17',1),P('2026-08-14',1),P('2026-09-11',0),P('2026-10-09',0)] },
       { key: 'bowel_frequency', points: [P('2026-04-24',1),P('2026-05-22',3),P('2026-06-05',5),P('2026-06-19',7),P('2026-07-03',6),P('2026-07-17',5),P('2026-08-14',4),P('2026-09-11',4),P('2026-10-09',3)] },
-      { key: 'pain_nrs', points: [P('2026-05-22',2),P('2026-06-05',4),P('2026-06-19',6),P('2026-07-03',5),P('2026-07-17',3),P('2026-08-14',2),P('2026-09-11',1),P('2026-10-09',1)] }
+      { key: 'pain_nrs', points: [P('2026-05-22',2),P('2026-06-05',4),P('2026-06-19',6),P('2026-07-03',5),P('2026-07-17',3),P('2026-08-14',2),P('2026-09-11',1),P('2026-10-09',1)] },
+      { key: 'phq9', points: [P('2026-05-08',8,'放疗第 1 周'),P('2026-06-19',11,'皮肤最重的一周'),P('2026-07-17',9),P('2026-08-14',6),P('2026-09-11',5),P('2026-10-09',4)] },
+      { key: 'gad7', points: [P('2026-05-08',6),P('2026-06-19',9,'等复查结果'),P('2026-07-17',7),P('2026-08-14',5),P('2026-09-11',4),P('2026-10-09',3)] }
+    ],
+    nodes: [
+      { date: '2026-04-15', side: 'left', value: 9, note: '盆腔 MRI · 短径' },
+      { date: '2026-04-15', side: 'right', value: 7, note: '盆腔 MRI · 短径' },
+      { date: '2026-09-02', side: 'left', value: 6, note: '复查 MRI · 短径' },
+      { date: '2026-09-02', side: 'right', value: null, note: '报告未单列右侧短径' }
     ],
     events: [
       { date: '2026-04-08', type: 'diagnosis', title: '活检确诊肛管鳞癌', detail: '肛门镜活检；病理 SCC，HPV16 阳性。' },
@@ -182,7 +192,15 @@ function profileB() {
       { key: 'weight', points: [P('2026-04-02',70.2),P('2026-04-30',69.8),P('2026-05-28',69.1),P('2026-06-25',69.4),P('2026-07-23',70.0),P('2026-08-20',70.4),P('2026-09-17',70.9),P('2026-10-15',71.6)] },
       { key: 'albumin', points: [P('2026-04-02',37.8),P('2026-05-28',38.2),P('2026-07-23',39.0),P('2026-09-17',39.6),P('2026-10-15',40.1)] },
       { key: 'hemoglobin', points: [P('2026-04-02',118),P('2026-05-28',116),P('2026-07-23',121),P('2026-09-17',125),P('2026-10-15',128)] },
-      { key: 'stoma_output', points: [P('2026-04-02',1),P('2026-05-28',1),P('2026-06-25',2),P('2026-07-23',1),P('2026-08-20',1),P('2026-09-17',0),P('2026-10-15',0)] }
+      { key: 'stoma_output', points: [P('2026-04-02',1),P('2026-05-28',1),P('2026-06-25',2),P('2026-07-23',1),P('2026-08-20',1),P('2026-09-17',0),P('2026-10-15',0)] },
+      { key: 'phq9', points: [P('2026-04-02',6),P('2026-06-25',8,'腹泻那几天'),P('2026-08-20',9,'不太敢出门'),P('2026-10-15',7)] },
+      { key: 'gad7', points: [P('2026-04-02',4),P('2026-06-25',6),P('2026-08-20',7),P('2026-10-15',5)] }
+    ],
+    nodes: [
+      { date: '2026-05-14', side: 'left', value: 5, note: '术后 3 个月 MRI · 短径' },
+      { date: '2026-05-14', side: 'right', value: 5, note: '术后 3 个月 MRI · 短径' },
+      { date: '2026-08-06', side: 'left', value: 6, note: '复查记录 · 触诊未及肿大，MRI 短径 6 mm' },
+      { date: '2026-08-06', side: 'right', value: 5, note: '复查记录 · MRI 短径 5 mm' }
     ],
     events: [
       { date: '2026-02-18', type: 'surgery', title: '腹会阴联合切除（APR）+ 乙状结肠造口', detail: '手术时间 5 小时 20 分；R0 切除。' },
@@ -288,6 +306,10 @@ async function main() {
         }
       }
     }
+    for (const n of p.nodes) {
+      db.prepare('INSERT INTO paired_measures(profile_key,measure_key,measured_on,side,value_num,unit,note,created_at) VALUES (?,?,?,?,?,?,?,?)')
+        .run(p.key, 'inguinal_node_short_axis', n.date, n.side, n.value, 'mm', n.note, now)
+    }
     for (const s of p.symptoms) {
       db.prepare('INSERT INTO symptoms(profile_key,term,ctcae_term,grade,onset_on,resolved_on,note,created_at) VALUES (?,?,?,?,?,?,?,?)')
         .run(p.key, s.term, s.ctcae, s.grade, s.onset, s.resolved, s.note, now)
@@ -326,7 +348,7 @@ async function main() {
     }
   }
   db.exec('COMMIT')
-  const counts = ['profiles','diagnoses','events','metric_points','symptoms','bowel_logs','skin_assessments','ostomy_logs','followups','questions','viewpoints'].map(t => `${t}=${db.prepare(`SELECT COUNT(*) c FROM ${t}`).get().c}`)
+  const counts = ['profiles','diagnoses','events','metric_points','paired_measures','symptoms','bowel_logs','skin_assessments','ostomy_logs','followups','questions','viewpoints'].map(t => `${t}=${db.prepare(`SELECT COUNT(*) c FROM ${t}`).get().c}`)
   db.close()
 
   const js = `/* 生成物：由 demo/build-demo-data.mjs 产出，不手改。${data.disclaimer} */\nwindow.DEMO_DATA = ${JSON.stringify(data, null, 1)};\n`

@@ -4,12 +4,13 @@
    不读写真实文件、不调用模型或宿主 API。
    视觉沿用小 X 宝家族原型骨架，品牌令牌换为橙 #EE7B1E / 暖黄 #FFC220。
    本癌种的结构差异（详见 docs/DIFF-MATRIX.md）：
-   1. 一级页 12 个，其中「肛周皮肤」独立成页——放化疗期最影响生活的毒性，不并入通用"副作用"；
+   1. 一级页 13 个，其中「肛周皮肤」独立成页——放化疗期最影响生活的毒性，不并入通用"副作用"；
    2. 「肠道与排粪」用排便日记 + Wexner 控便评分，不用通用的"腹泻"页；
    3. 「造口与生活」把造口护理、亲密关系、工作社交放在一页，不拆成三个空入口；
-   4. 一图秀默认体重 + 白蛋白两条数值线 + 肛周皮肤 RTOG 分级（分类序列只画节点不连线）。 */
+   4. 「心理支持」独立成页（2026-10-21 用户确认）：自评记录 + 病友与家属 + 求助路径，不做诊断；
+   5. 一图秀默认体重 + 白蛋白两条数值线 + 肛周皮肤 RTOG 分级（分类序列只画节点不连线）。 */
 
-const APP_INFO = { version: '0.1.0', build: '2026-10-21', channel: 'prototype' };
+const APP_INFO = { version: '0.1.1', build: '2026-10-21', channel: 'prototype' };
 const D = window.DEMO_DATA;
 const T = window.TRIALS_DATA;
 
@@ -37,16 +38,17 @@ const icons = {
   ostomy: 'M12 3a5 5 0 0 1 5 5v3H7V8a5 5 0 0 1 5-5ZM7 14h10v3a5 5 0 0 1-10 0v-3Zm3-1h4',
   calendar: 'M4 5h16v16H4ZM8 3v4m8-4v4M4 10h16m-12 4h2m4 0h2m-8 3h2',
   flask: 'M9 3h6v5l5 9a2 2 0 0 1-2 3H6a2 2 0 0 1-2-3l5-9Z',
-  chat: 'M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H10l-6 5V5ZM8 8h8M8 11h5'
+  chat: 'M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H10l-6 5V5ZM8 8h8M8 11h5',
+  heart: 'M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9Z'
 };
-const ICON_ALIAS = { dashboard: 'home', records: 'folder', profile: 'badge', treatment: 'drip', toxicity: 'alert', bowel: 'bowel', skin: 'skin', labs: 'lab', timeline: 'chart', life: 'ostomy', followup: 'calendar', trials: 'flask' };
+const ICON_ALIAS = { dashboard: 'home', records: 'folder', profile: 'badge', treatment: 'drip', toxicity: 'alert', bowel: 'bowel', skin: 'skin', labs: 'lab', timeline: 'chart', life: 'ostomy', psych: 'heart', followup: 'calendar', trials: 'flask' };
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${icons[k] || icons[ICON_ALIAS[k]] || icons.badge}"/></svg>`;
 
 const PAGES = [
   ['dashboard', '看板', 0], ['records', '病情整理', 2], ['profile', '我的分型', 0],
   ['treatment', '治疗历程', 0], ['toxicity', '副作用与症状', 4], ['bowel', '肠道与排粪', 0],
   ['skin', '肛周皮肤', 0], ['labs', '检查与指标', 0], ['timeline', '病情一图秀', 0],
-  ['life', '造口与生活', 3], ['followup', '复查与随访', 0], ['trials', '临床研究', 0]
+  ['life', '造口与生活', 3], ['psych', '心理支持', 0], ['followup', '复查与随访', 0], ['trials', '临床研究', 0]
 ];
 const SUBPAGES = {
   records: ['资料库', '待核对候选', '病情档案', '指标与事件'],
@@ -58,6 +60,7 @@ const SUBPAGES = {
   labs: ['血常规与生化', '肿瘤标志物', '影像与内镜'],
   timeline: ['数值曲线', '分类与事件', '数据口径'],
   life: ['造口日常', '亲密关系与生育', '工作与社交'],
+  psych: ['情绪记录', '病友与家属', '求助路径'],
   followup: ['复查节奏', '本次复查准备', '问题清单'],
   trials: ['2026 线索', '已收藏', '入组要问什么']
 };
@@ -71,7 +74,8 @@ const SUBTITLES = {
   skin: '肛周皮肤是这轮治疗最常见的困扰，按 RTOG 分级逐次记录，比"好一点"更能说明问题。',
   labs: '化验值只显示与你上次、与参考区间的对照，不生成结论。',
   timeline: '体重、白蛋白与皮肤分级放回同一段时间，看见变化发生在哪一步。',
-  life: '造口、亲密关系、工作三件事都影响每天，分开说，不合并成"心理问题"。',
+  life: '造口、亲密关系、工作三件事都影响每天，分开说；情绪的部分放到「心理支持」。',
+  psych: '情绪不是治疗的附属品。这里只做自评记录与求助准备，不诊断抑郁，也不评价你"够不够坚强"。',
   followup: '复查节奏、本次要做的检查、要问的问题，一页带走。',
   trials: '按癌种与分期初筛登记信息；登记 ≠ 有效 ≠ 安全 ≠ 可入组。'
 };
@@ -161,7 +165,8 @@ function pageHead() {
     skin: `<button class="primary" data-action="add-skin">记今天的皮肤</button>`,
     followup: `<button class="primary" data-action="print-visit">生成复诊摘要</button>`,
     trials: `<button data-action="trial-source">数据来源与覆盖</button>`,
-    life: `<button data-action="viewpoint">记一条我的担心</button>`
+    life: `<button data-action="viewpoint">记一条我的担心</button>`,
+    psych: `<button class="primary" data-action="add-psych">记一次情绪自评</button>`
   }[state.view] || '';
   return `<div class="page-head"><div><span class="eyebrow">${esc(p.name)} · ${esc(p.stageLine)}</span><h1>${VIEW_TITLES[state.view]}</h1><p>${SUBTITLES[state.view]}</p></div><div class="actions">${actions}</div></div>${subnavMarkup()}`;
 }
@@ -332,11 +337,24 @@ views.records = (p, sub) => {
 views.profile = (p, sub) => {
   const d = p.diagnosis;
   if (sub === 1) {
+    const nodes = p.nodes || [];
+    const dates = [...new Set(nodes.map(n => n.date))].sort().reverse();
+    const nodeRows = dates.map(dt => {
+      const l = nodes.find(n => n.date === dt && n.side === 'left');
+      const r = nodes.find(n => n.date === dt && n.side === 'right');
+      const lv = l ? l.value : null, rv = r ? r.value : null;
+      const both = lv != null && rv != null;
+      return `<tr><td class="num">${cnDate(dt)}</td><td class="num">${lv == null ? '—' : fmtNum(lv)}</td><td class="num">${rv == null ? '—' : fmtNum(rv)}</td><td class="num">${both ? fmtNum(lv - rv) : '<span class="pill grey">不计算</span>'}</td><td>${esc((l && l.note) || (r && r.note) || '—')}</td></tr>`;
+    }).join('');
     return `<div class="subtype-hero"><div>
       <span class="code">AJCC 8th · 肛管</span><h2>${esc(d.stage)}</h2><span class="en">${esc(d.t)} · ${esc(d.n)} · ${esc(d.m)}</span>
       <div class="subtype-meta"><span class="pill orange">${esc(d.histology)}</span><span class="pill grey">${esc(d.site)}</span><span class="pill grey">${esc(d.grade)}</span></div>
       <p class="small-note">分期字段来自影像与病理原文；工作台不替你重新分期。</p>
     </div><div class="path-tree"><div class="on">T · 原发肿瘤 ${esc(d.t)}</div><div class="lv2 on">N · 区域淋巴结 ${esc(d.n)}</div><div class="lv3 on">M · 远处转移 ${esc(d.m)}</div><div class="lv2">腹股沟淋巴结：左右分开记，缺一侧不补 0</div></div></div>
+    <div class="card" style="margin-bottom:14px"><div class="card-head"><div><h2>双侧腹股沟淋巴结短径</h2><p>左右各一行；按短径（mm）记录，缺侧留空。</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>测量日期</th><th>左侧（mm）</th><th>右侧（mm）</th><th>左−右（mm）</th><th>来源 / 备注</th></tr></thead><tbody>${nodeRows || '<tr><td colspan="5">还没有记录</td></tr>'}</tbody></table></div>
+      <div class="help-box">口径参考 RECIST 1.1 的淋巴结短径测量法：短径 ≥15 mm 才作为病理性增大考虑；<b>任一侧缺失时不计算差值</b>，也不按 0 处理。是否属于区域淋巴结受累、N 分期如何，仍由医生结合 AJCC 8th 判断，工作台不生成结论。</div>
+    </div>
     <div class="grid three">
       <div class="card"><h3>T 分期看什么</h3><p class="small-note">最大径 ≤2 cm / 2–5 cm / >5 cm，以及是否侵犯邻近器官。测量值来自影像报告，不由症状推断。</p></div>
       <div class="card"><h3>N 分期看什么</h3><p class="small-note">直肠系膜、髂内、髂外、腹股沟淋巴结分区不同，N1a/N1b/N1c 不能互相替代。</p></div>
@@ -712,7 +730,83 @@ views.life = (p, sub) => {
     <div class="card"><h2>我的看法</h2>${p.viewpoints.map(v => `<div class="saved-item private"><b>${cnDate(v.date)} · ${esc(v.about || '')}</b><p>${esc(v.text)}</p><small>这是你的看法，不是医生结论；不进趋势，也不进摘要事实区。</small></div>`).join('')}</div></div>`;
 };
 
-/* 11. 复查与随访 */
+/* 11. 心理支持 */
+views.psych = (p, sub) => {
+  const phq = seriesOf(p, 'phq9');
+  const gad = seriesOf(p, 'gad7');
+  if (sub === 1) {
+    return `<div class="grid two">
+      <div class="card"><div class="card-head"><div><h2>病友互助</h2><p>同病种的人能提供的是经验，不是治疗方案。</p></div></div>
+        <div class="row"><div><b>在哪里找</b><p>医院的社工部、患者服务中心、造口门诊通常会知道本地的病友组织；也可以问主管医生或护士。</p></div></div>
+        <div class="row"><div><b>可以聊什么</b><p>放疗期间怎么坐、造口袋怎么选、复查前一天怎么准备、家里人怎么开口。</p></div></div>
+        <div class="row"><div><b>不适合问什么</b><p>"我这个情况该不该手术""这个药有没有效"——这类问题请回到你的主管医生。</p></div></div>
+        <div class="help-box">工作台不推荐、不排序任何病友组织或互助群，也不替它们背书。</div></div>
+      <div class="card"><div class="card-head"><div><h2>家属可以做什么</h2><p>陪着，不等于替对方做决定。</p></div></div>
+        <div class="flag-list">
+          <div><span>听的时候先不急着安慰，把"我在"说出来就够了</span></div>
+          <div><span>陪同就诊时帮忙记问题与医生原话，不替患者回答</span></div>
+          <div><span>造口护理、换药这类事，等患者开口再接手</span></div>
+          <div><span>家属自己也需要支持，可以一起找社工或心理门诊</span></div>
+        </div>
+        <div class="divider"></div>
+        <p class="small-note">如果家里人对病情说法不一致，把分歧写下来带去门诊，比在家里争更有用。</p>
+      </div></div>
+    <div class="card" style="margin-top:14px"><div class="card-head"><div><h2>开不了口时，可以先写下来</h2><p>这些话不必说得好听，能递出去就行。</p></div></div>
+      <div class="flag-list">
+        <div><span>"我最近总在想复查结果，晚上睡不好。"</span></div>
+        <div><span>"我不是不想出门，是怕造口袋漏。"</span></div>
+        <div><span>"你们别一直跟我说要乐观，我现在做不到。"</span></div>
+      </div>
+      <div class="actions" style="margin-top:12px"><button data-action="viewpoint">＋ 记一条我的担心</button></div>
+      ${p.viewpoints.length ? p.viewpoints.map(v => `<div class="saved-item private"><b>${cnDate(v.date)} · ${esc(v.about || '')}</b><p>${esc(v.text)}</p><small>这是你的看法，不是医生结论；不进趋势，也不进摘要事实区。</small></div>`).join('') : ''}
+    </div>`;
+  }
+  if (sub === 2) {
+    return `<div class="grid two">
+      <div class="card"><div class="card-head"><div><h2>可以找谁</h2><p>从最近的那一层开始，不必一步到位。</p></div></div>
+        <div class="row"><div><b>肿瘤科 / 放疗科团队</b><p>他们最清楚你的治疗阶段，也能判断情绪变化是否与药物、疼痛、贫血、甲状腺功能等有关。</p></div></div>
+        <div class="row"><div><b>医院心理科 / 精神科</b><p>可以问门诊护士"你们有没有肿瘤心理门诊"，或请主管医生转介。</p></div></div>
+        <div class="row"><div><b>医务社工</b><p>帮忙处理经济压力、照护安排、异地就医住宿等具体问题；这些压力本身就会拖垮情绪。</p></div></div>
+        <div class="row"><div><b>造口护士</b><p>如果焦虑主要来自渗漏、气味、换袋，先把护理问题解决，情绪往往会跟着松一点。</p></div></div>
+        <div class="help-box">工作台不推荐具体机构、医生或咨询师，也不评价任何疗法；需要名单时请问医院社工或当地卫生健康部门。</div></div>
+      <div class="card"><div class="card-head"><div><h2>什么情况要尽快找人</h2><p>这些不是"想开点"能过去的信号。</p></div></div>
+        <div class="flag-list danger">
+          <div><span>出现伤害自己或结束生命的想法——立刻联系身边信任的人，或拨打当地急救电话</span></div>
+          <div><span>连续两周以上情绪低落、对什么都提不起兴趣</span></div>
+          <div><span>几乎每天睡不着或整夜惊醒，白天无法正常活动</span></div>
+          <div><span>吃不下、体重短期内明显下降，且不是因为治疗反应</span></div>
+          <div><span>反复惊恐发作、心慌出汗，无法出门</span></div>
+        </div>
+        <p class="small-note">以上是求助信号，不是诊断标准。是否达到抑郁或焦虑障碍，需要专业人员评估。</p>
+        <div class="help-box">紧急情况下不要等预约：联系当地急救，或让家人陪同去最近医院的急诊。</div>
+      </div></div>
+    <div class="card" style="margin-top:14px"><div class="card-head"><div><h2>去之前可以准备的三件事</h2></div></div>
+      <div class="flag-list">
+        <div><span>最近两周的睡眠、食欲、精力，各用一句话描述</span></div>
+        <div><span>最难受的时刻是什么场景（夜里、复查前、换袋时）</span></div>
+        <div><span>希望对方帮到什么：只是想说出来 / 需要用药评估 / 需要家庭沟通</span></div>
+      </div></div>`;
+  }
+  const dates = [...new Set([...phq, ...gad].map(x => x.date))].sort().reverse();
+  const rows = dates.map(dt => {
+    const a = phq.find(x => x.date === dt), b = gad.find(x => x.date === dt);
+    return `<tr><td class="num">${cnDate(dt)}</td><td class="num">${a ? fmtNum(a.value) : '—'}</td><td class="num">${b ? fmtNum(b.value) : '—'}</td><td>${esc((a && a.note) || (b && b.note) || '—')}</td></tr>`;
+  }).join('');
+  return `<div class="notice plain"><b>这是自评，不是诊断。</b> PHQ-9 与 GAD-7 的分数只用来观察变化、帮你把话说清楚；是否达到抑郁或焦虑障碍，需要专业人员评估。量表不等于结论，分数也不评价你"够不够坚强"。</div>
+  <div class="grid two">${metricCard(p, 'phq9')}${metricCard(p, 'gad7')}</div>
+  <div class="card" style="margin-top:14px"><div class="card-head"><div><h2>情绪记录</h2><p>同一天两项都记时放在一行；空白表示那次没填。</p></div><button data-action="add-psych">＋ 记一次</button></div>
+    <div class="table-wrap"><table><thead><tr><th>日期</th><th>PHQ-9（0–27）</th><th>GAD-7（0–21）</th><th>当时的场景</th></tr></thead><tbody>${rows || '<tr><td colspan="4">还没有记录</td></tr>'}</tbody></table></div>
+    <div class="help-box">分数越高表示症状越多、越频繁，但<b>不能反推病情轻重</b>，也不能用来判断治疗有没有效。若某一项连续升高，把它带去门诊，而不是自己在家里找答案。</div>
+  </div>
+  <div class="grid two" style="margin-top:14px">
+    <div class="card"><h2>和情绪混在一起的事</h2><p class="small-note">疼痛、贫血、失眠、造口渗漏、经济压力都会让人"看起来很抑郁"。先把这些具体问题记下来，医生判断时才有依据。</p>
+      <div class="flag-list"><div><span>最近 2 周疼痛 NRS 最高几分</span></div><div><span>夜里起来几次，是疼醒还是便意</span></div><div><span>这个月造口渗漏几次</span></div></div></div>
+    <div class="card"><h2>我的担心</h2>${p.viewpoints.map(v => `<div class="saved-item private"><b>${cnDate(v.date)} · ${esc(v.about || '')}</b><p>${esc(v.text)}</p><small>这是你的看法，不是医生结论。</small></div>`).join('') || '<p class="small-note">还没有记录。想到什么就先写一句。</p>'}
+      <button class="text-button" data-action="viewpoint">＋ 记一条我的担心</button></div>
+  </div>`;
+};
+
+/* 12. 复查与随访 */
 views.followup = (p, sub) => {
   const next = p.followups.find(f => !f.done);
   if (sub === 1) {
@@ -738,7 +832,7 @@ views.followup = (p, sub) => {
     <div class="help-box">治疗结束后的前 2 年通常复查更密，之后拉长；具体间隔与检查项目由治疗医院根据分期与风险决定。</div></div>`;
 };
 
-/* 12. 临床研究 */
+/* 13. 临床研究 */
 views.trials = (p, sub) => {
   if (sub === 1) {
     const saved = T.rows.filter(t => state.savedTrials.has(t.key));
@@ -868,6 +962,7 @@ document.addEventListener('click', (e) => {
   if (act === 'upload-sim') { toast('原型不读取文件；接入后从你选择的资料目录导入'); return; }
   if (act === 'open-doc') { const p = prof(); const d = p.docs.find(x => x.id === el.dataset.doc); if (d) openDialog(d.title, `<p class="small-note">${esc(d.type)} · ${cnDate(d.date)} · ${d.pages} 页 · ${esc(d.status)}</p><div class="photo-slot" style="height:180px">原件预览占位 · 原型不读取 PDF</div><p class="small-note">接入后在这里显示原文与解析对照；原件始终保留在资料目录。</p>`, '', '资料库'); return; }
   if (act === 'accept-cand' || act === 'reject-cand') { const i = Number(el.dataset.idx); const p = prof(); if (p.candidates[i]) { p.candidates[i].status = act === 'accept-cand' ? 'accepted' : 'rejected'; toast(act === 'accept-cand' ? '已接受（模拟），将写入对应表' : '已拒绝（模拟）'); render(); } return; }
+  if (act === 'add-psych') { openDialog('记一次情绪自评', `<p class="small-note">PHQ-9 共 9 题、GAD-7 共 7 题，原型只演示录入结果；接入后按题目逐项作答并自动计分。</p><label class="form-label">PHQ-9 总分（0–27）</label><input type="number" min="0" max="27" placeholder="例：6"><label class="form-label" style="margin-top:10px">GAD-7 总分（0–21）</label><input type="number" min="0" max="21" placeholder="例：4"><label class="form-label" style="margin-top:10px">当时的场景（可不填）</label><input placeholder="例：复查前一天晚上">`, '<button data-action="close">取消</button><button class="primary" data-action="save-sim">保存（模拟）</button>', '心理支持'); return; }
   if (act === 'add-symptom' || act === 'add-bowel' || act === 'add-skin') { quickAddDialog(); return; }
   if (act === 'add-question') { openDialog('加一个问题', `<label class="form-label">要问医生的问题</label><textarea placeholder="例：排便 3–4 次/日需要做肛门测压吗？"></textarea><label class="form-label" style="margin-top:10px">类别</label><select><option>肠道功能</option><option>皮肤护理</option><option>复查</option><option>造口护理</option><option>生活</option></select>`, '<button data-action="close">取消</button><button class="primary" data-action="save-sim">保存（模拟）</button>', '复诊准备'); return; }
   if (act === 'mark-asked') { const i = Number(el.dataset.q); prof().questions[i].status = 'asked'; toast('已标记为问过'); render(); return; }

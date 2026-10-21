@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/
-const FROZEN_PROTOTYPE = '0.1.0'
+const FROZEN_PROTOTYPE = '0.1.1'
 const problems = []
 
 if (!existsSync(join(root, 'VERSION'))) {

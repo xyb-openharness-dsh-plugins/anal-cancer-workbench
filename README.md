@@ -2,14 +2,14 @@
 
 本机优先的肛管癌（肛管鳞癌）放化疗副作用、肠道与排粪功能、造口生活与复查准备工作台。
 
-**当前版本 `0.1.0`，处于 ZERO-TO-DEV 阶段 3.1（设计确认前）。**
+**当前版本 `0.1.1`，处于 ZERO-TO-DEV 阶段 3.1（设计确认前）。**
 原型与数据模型已完成，**尚未进入开发版，也未装机**。G1 需求 / G2 原型 / G3 数据模型三道闸口**均待签**。
 
 ## 这一轮交付了什么
 
 | 交付物 | 位置 |
 | --- | --- |
-| 交互原型（12 个一级页 / 25 个二级页） | `prototypes/v0.2/index.html` |
+| 交互原型（13 个一级页 / 38 个二级页） | `prototypes/v0.2/index.html` |
 | 设计文档 | `docs/SPEC.md`、`docs/DIFF-MATRIX.md`、`docs/PATIENT-FLOW.md`、`docs/SCHEMA.md` |
 | 临床资料包（224 条登记，快照 2026-10-21） | `research/anal-cancer/` |
 | 数据模型（19 表 + 1 视图） | `schema/0001_initial.sql`、`schema/freeze-contract.md` |
@@ -39,7 +39,7 @@ NODE_OPTIONS= npm run check
 ```
 
 依次执行：语法 → schema 冻结合同 → 文案红线 → 演示库列一致性 → 版本一致 → 包结构。
-当前结果：**全绿**；`check:columns` 输出两条告警（`paired_measures`、`trial_notes` 有列无行，见「已知缺口」）。
+当前结果：**全绿**；`check:columns` 仍有一条告警（`trial_notes` 有列无行，属合法空态）。
 
 单独重建演示库与资料包：
 
@@ -51,7 +51,7 @@ node scripts/build-trials-excerpt.mjs  # 重写原型 trials-data.js 的 10 条�
 
 ## 已知缺口（写在这里，不藏在文档里）
 
-- `paired_measures`（双侧腹股沟淋巴结短径）**建表但未播种**；四点位契约在原型上暂不可见，需 G3 评审确认口径后补。
+- `paired_measures` 已播种 8 行（2 档案 × 2 次 × 左右）；陈女士 2026-09-02 右侧为 NULL，用于演示"缺侧不计算差值"。
 - `trial_notes`（收藏的试验）为空，属合法空态。
 - 临床资料包只有 ClinicalTrials.gov 一条通道；ICTRP / ChiCTR / ChinaDrugTrials 为 `not_configured`。
 - 资料包是 **Cumulative 快照**（2003–2026），2026 年首次公示仅 14 条，口径见 `docs/CLINICAL-DATA-2026.md`。

@@ -8,18 +8,23 @@
 | 契约 | 落地方式 | 反例（不允许） |
 | --- | --- | --- |
 | ① 看法恒不为结论 | `viewpoints` 表**没有** `is_conclusion` 字段，只有 `recorded_by` / `about`；读模型不得把它并入指标或摘要事实区 | 把"我觉得括约肌坏了"写成 `diagnoses.note` |
-| ② 缺失恒为 NULL | `paired_measures` 左右各一行，缺一侧就不写那一行；`v_paired_delta` 用 `CASE WHEN ... IS NULL THEN NULL` 返回 NULL，**不返回 0** | 缺右侧时 `delta = left - 0` |
+| ② 缺失恒为 NULL | `paired_measures` 左右各一行；缺侧可写 `value_num=NULL` 或不写该行；`v_paired_delta` 用 `CASE WHEN ... IS NULL THEN NULL` 返回 NULL，**不返回 0** | 缺右侧时 `delta = left - 0` |
 | ③ 更正只新增版本 | `diagnoses.version` + `supersedes_id`；`treatment_lines.seq` 唯一，路径切换新增下一行 | `UPDATE diagnoses SET t_stage=...` 覆盖旧值 |
 | ④ 事实四层不合并 | `documents`（原件）→ `candidates`（候选）→ `metric_points`/`symptoms`/…（记录）→ 视图（指标） | 解析结果直接写 `metric_points`，不留候选 |
 
-### 关于"四点位"的偏差（必须在评审时确认）
+### 关于"四点位"的偏差（2026-10-21 已确认）
 
 乳腺癌的"四点位 1–4、缺健侧不生成差值"在肛管癌**没有对应测量**。
 本模型保留契约的**语义**（成对测量、缺一侧不生成差值），载体换成 `paired_measures`：
 
 - 当前唯一用途：双侧腹股沟淋巴结短径（`measure_key='inguinal_node_short_axis'`）。
+- **测量口径（用户 2026-10-21 确认，参考指南修正）**：按 RECIST 1.1 的淋巴结短径法测量，单位 mm；
+  短径 **≥15 mm** 才作为病理性增大考虑，**<10 mm** 视为正常大小；介于两者之间由医生结合影像判断。
+  这里只规定"怎么量、怎么存"，**不据此生成 N 分期结论**——分期仍按 AJCC 8th 由医生判断。
+- 缺侧的行可以存在但 `value_num` 为 NULL（表示"这次没测/报告未单列"），视图返回的 `delta` 必须为 NULL。
 - 读模型必须判断 `delta === null`，不能把 null 当 0。
-- 如果评审认为该字段也不需要，可整表删除（不影响其它表），但**不得**改成单侧字段 + 隐式 0。
+- 原型已在「我的分型 → 分期与淋巴结」展示左右短径与差值；缺侧显示"不计算"。
+- 若后续评审认为该字段不需要，可整表删除（不影响其它表），但**不得**改成单侧字段 + 隐式 0。
 
 ## 2. 表分组
 

@@ -71,6 +71,24 @@ window.DEMO_DATA = {
    "color": "#3F6FA8",
    "group": "造口",
    "order": 70
+  },
+  {
+   "key": "phq9",
+   "label": "情绪自评 PHQ-9",
+   "kind": "numeric",
+   "unit": "分",
+   "color": "#8A5A9E",
+   "group": "情绪与心理",
+   "order": 80
+  },
+  {
+   "key": "gad7",
+   "label": "焦虑自评 GAD-7",
+   "kind": "numeric",
+   "unit": "分",
+   "color": "#B06A8A",
+   "group": "情绪与心理",
+   "order": 90
   }
  ],
  "scales": {
@@ -513,6 +531,102 @@ window.DEMO_DATA = {
        "note": null
       }
      ]
+    },
+    {
+     "key": "phq9",
+     "points": [
+      {
+       "date": "2026-05-08",
+       "value": 8,
+       "note": "放疗第 1 周"
+      },
+      {
+       "date": "2026-06-19",
+       "value": 11,
+       "note": "皮肤最重的一周"
+      },
+      {
+       "date": "2026-07-17",
+       "value": 9,
+       "note": null
+      },
+      {
+       "date": "2026-08-14",
+       "value": 6,
+       "note": null
+      },
+      {
+       "date": "2026-09-11",
+       "value": 5,
+       "note": null
+      },
+      {
+       "date": "2026-10-09",
+       "value": 4,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "gad7",
+     "points": [
+      {
+       "date": "2026-05-08",
+       "value": 6,
+       "note": null
+      },
+      {
+       "date": "2026-06-19",
+       "value": 9,
+       "note": "等复查结果"
+      },
+      {
+       "date": "2026-07-17",
+       "value": 7,
+       "note": null
+      },
+      {
+       "date": "2026-08-14",
+       "value": 5,
+       "note": null
+      },
+      {
+       "date": "2026-09-11",
+       "value": 4,
+       "note": null
+      },
+      {
+       "date": "2026-10-09",
+       "value": 3,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "nodes": [
+    {
+     "date": "2026-04-15",
+     "side": "left",
+     "value": 9,
+     "note": "盆腔 MRI · 短径"
+    },
+    {
+     "date": "2026-04-15",
+     "side": "right",
+     "value": 7,
+     "note": "盆腔 MRI · 短径"
+    },
+    {
+     "date": "2026-09-02",
+     "side": "left",
+     "value": 6,
+     "note": "复查 MRI · 短径"
+    },
+    {
+     "date": "2026-09-02",
+     "side": "right",
+     "value": null,
+     "note": "报告未单列右侧短径"
     }
    ],
    "events": [
@@ -1110,6 +1224,82 @@ window.DEMO_DATA = {
        "note": null
       }
      ]
+    },
+    {
+     "key": "phq9",
+     "points": [
+      {
+       "date": "2026-04-02",
+       "value": 6,
+       "note": null
+      },
+      {
+       "date": "2026-06-25",
+       "value": 8,
+       "note": "腹泻那几天"
+      },
+      {
+       "date": "2026-08-20",
+       "value": 9,
+       "note": "不太敢出门"
+      },
+      {
+       "date": "2026-10-15",
+       "value": 7,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "gad7",
+     "points": [
+      {
+       "date": "2026-04-02",
+       "value": 4,
+       "note": null
+      },
+      {
+       "date": "2026-06-25",
+       "value": 6,
+       "note": null
+      },
+      {
+       "date": "2026-08-20",
+       "value": 7,
+       "note": null
+      },
+      {
+       "date": "2026-10-15",
+       "value": 5,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "nodes": [
+    {
+     "date": "2026-05-14",
+     "side": "left",
+     "value": 5,
+     "note": "术后 3 个月 MRI · 短径"
+    },
+    {
+     "date": "2026-05-14",
+     "side": "right",
+     "value": 5,
+     "note": "术后 3 个月 MRI · 短径"
+    },
+    {
+     "date": "2026-08-06",
+     "side": "left",
+     "value": 6,
+     "note": "复查记录 · 触诊未及肿大，MRI 短径 6 mm"
+    },
+    {
+     "date": "2026-08-06",
+     "side": "right",
+     "value": 5,
+     "note": "复查记录 · MRI 短径 5 mm"
     }
    ],
    "events": [
