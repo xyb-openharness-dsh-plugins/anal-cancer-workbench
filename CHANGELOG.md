@@ -1,5 +1,48 @@
 # CHANGELOG
 
+## 0.2.2 — 2026-10-27（指南原件落实：不再用「未取得」交差）
+
+0.2.1 的 evidence 表 4 行全部写成「未取得原件，据二次来源」，链接指向的只是学会首页/指南详情页，
+**不是任何一份文件本身**。闸门（`check-primer-links.mjs`）只验 https 可达，不验「是否真拿到原件」，
+所以 15/15 全绿而内容不合格。本版逐条实测补齐。
+
+### 变更
+
+- `primer-data.js`（原型与 `public/` 同源）evidence 表由 4 行改为 5 行，新增 **CACA 肛管癌**：
+  | 机构 | 版本 | 原件状态 |
+  | --- | --- | --- |
+  | NCCN | V2.2026（患者版据该版改编） | **已取得**：官方患者版 PDF，43 页，直链可下 |
+  | CACA | V1.0_2022（2022-03-31） | **已取得**：官网在线全文，逐页可读（下载需登录） |
+  | ESMO | 2021（Ann Oncol 32:1087-1100） | **已取得**：官方指南页；全文页对脚本 403、浏览器可开 |
+  | CSCO | 结直肠癌指南 2025 | **无**：合订本目录无肛管癌独立指南，无官方免费全文 → `nolink` |
+  | AJCC | 第 8 版 | **部分**：肛管章节在付费手册内；官方免费仅第 1 章分期总则 PDF |
+- ESMO 版本由「2026 更新（未核验）」改为实测的 **2021 版**；NCCN 由「2026 版（未核验）」改为
+  **V2.2026**（据患者版 PDF 首页标注）；CSCO 由「CSCO 肛管癌/结直肠癌指南」改为「肛管癌未单独成册」。
+- `definition` / `landscape` / `trend` 三段的来源行同步换成实链；`trend` 段第 3 条由「均未核验」
+  改为「已确认三份 + 仍未核验两项（CSCO 2026 状态、ESMO 是否已有更新版）」。
+- `docs/CLINICAL-DATA-2026.md` §四由三行「未核验」改为原件核对表，逐行记状态与链接。
+
+### 链接（2026-10-27 逐条 curl 实测）
+
+- NCCN 患者版 PDF — `https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf` — 200 / application/pdf / 1,266,276 B / 43 页
+- CACA 肛管癌 V1.0_2022 — `https://cacaguidelines.cacakp.com/pdflist/detail?id=37` — 200 / text/html
+- ESMO 官方指南页 — `https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-anal-cancer` — 200 / text/html
+- AJCC 8th 分期总则 PDF — `https://www.facs.org/media/2zvlrdmi/ajcc_staging_rules_8th_ed.pdf` — 200 / application/pdf
+- ClinicalTrials.gov 检索入口 — `https://clinicaltrials.gov/search?cond=anal%20cancer&aggFilters=studyType:int` — 200
+
+### 已排除的假链接（记录以免重复踩）
+
+- `https://www.nccn.org/professionals/physician_gls/pdf/anal.pdf` — 200 但为 79 KB HTML 登录页，非 PDF（临床版需订阅）
+- `https://s3-eu-west-1.amazonaws.com/.../ESMOPG2023_LGI_...pdf` — 真 PDF，但为 2023 年 Lower GI 口袋指南汇编，非肛管癌 CPG 本体
+- `https://doi.org/10.1007/978-3-319-40618-3_18`（AJCC 8th 肛管章节）— 页面标题为 "Deleted"
+- `https://www.facs.org/media/*anal*ajcc*.pdf` — 各命名均 404
+
+### 未做
+
+- `check-primer-links.mjs` 仍只验「有没有 https 链接」，不验「链接是不是文件本身」；本版靠人工实测补位，
+  闸门缺口未修（改闸门要动 starter 与全家族，另立任务）。
+- 装机副本未刷新（V2 装机层未验）。
+
 ## 0.2.1 — 2026-10-27（36 号 v2 补齐：指南可点 + 状态卡）
 
 按 starter `prompts/PRIMER-BACKFILL.md` 与 `docs/36-DISEASE-PRIMER.md` §2.1 / §2.5 / §2.6 补齐。

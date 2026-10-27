@@ -93,11 +93,19 @@ NCI 20、AIDS Malignancy Consortium 10、M.D. Anderson 6、CHU Besançon 6、UCS
 
 ## 四、2026 指南监测入口
 
-- 中国 CSCO 肛管癌 / 结直肠癌指南 2026 版状态：**未核验**。
-- NCCN Anal Carcinoma 2026 版更新状态：**未核验**。
-- ESMO Anal Cancer 指南 2026 更新状态：**未核验**。
+**原件核对（2026-10-27 逐条实测，结论以此为准）**
 
-在取得并核对中国现行指南全文之前，工作台不得生成任何"按最新指南"的治疗解释内容。
+| 机构 | 文件与版本 | 原件状态 | 链接 |
+| --- | --- | --- | --- |
+| NCCN | Anal Carcinoma **V2.2026**（患者版据该版改编） | **已取得**：官方患者版 PDF，43 页，可直接下载 | `https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf` |
+| CACA | 中国肿瘤整合诊治指南·肛管癌 **V1.0_2022**（2022-03-31，大肠癌专业委员会） | **已取得**：官网在线全文，逐页可读；下载需登录 | `https://cacaguidelines.cacakp.com/pdflist/detail?id=37` |
+| ESMO | Anal cancer CPG **2021**（Ann Oncol 2021;32:1087-1100） | **已取得**：官方指南页可开；全文页 annalsofoncology.org 对脚本返回 403，浏览器可开 | `https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-anal-cancer` |
+| CSCO | 结直肠癌诊疗指南 2025（**肛管癌未单独成册**） | **无原件**：2025 版合订本目录无肛管癌独立指南，亦无官方免费在线全文 | — |
+| AJCC | Cancer Staging Manual 8th ed.（肛管章节） | **部分**：肛管章节在付费手册内；官方免费仅第 1 章分期总则 PDF | `https://www.facs.org/media/2zvlrdmi/ajcc_staging_rules_8th_ed.pdf` |
+
+**仍未核验**：CSCO 2026 版状态；ESMO 是否已发布 2021 之后的更新版；AJCC 第 9 版是否覆盖肛管。
+
+在取得并核对上述原件之前，工作台不得生成任何"按最新指南"的治疗解释内容。未取得原件的条目（CSCO）在「疾病概要」页显式标 `nolink`，不得用占位链接充数。
 
 ## 五、对工作台页面的直接约束
 
