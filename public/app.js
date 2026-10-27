@@ -1,5 +1,5 @@
 'use strict';
-/* 小萌宝 AnalPal v0.2.0 — 肛管癌工作台开发版（阶段 3.2）。
+/* 小萌宝 AnalPal v0.2.1 — 肛管癌工作台开发版（阶段 3.2）。
    与原型 prototypes/v0.2/app.js 共用同一份视图代码，只有数据入口不同：
    原型读 demo-data.js 静态夹具，本文件走 /api/anal-cancer/bootstrap。
    患者资料为模拟夹具（dsh/demo-data.json，meta.source = "demo-fixture"）；临床试验为登记摘录（状态未核实）。
@@ -12,7 +12,7 @@
    4. 「心理支持」独立成页（2026-10-21 用户确认）：自评记录 + 病友与家属 + 求助路径，不做诊断；
    5. 一图秀默认体重 + 白蛋白两条数值线 + 肛周皮肤 RTOG 分级（分类序列只画节点不连线）。 */
 
-const APP_INFO = { version: '0.2.0', build: '2026-10-21', channel: 'dev' };
+const APP_INFO = { version: '0.2.1', build: '2026-10-21', channel: 'dev' };
 let D = null;
 let T = null;
 /* 开发版：UI 由 /api/anal-cancer/ui/ 提供，接口基址按自身路径推出来；
@@ -268,6 +268,44 @@ function smoothPath(pts) {
 /* ---------------- views ---------------- */
 const views = {};
 
+/* 36 号 §2.6 病程状态卡：四件 = 卡头 eyebrow / 锚点派生天数 / 现状行 / 出口按钮排。
+   天数一律由锚点日（治疗线起点 care.started）派生，不手填；无锚点显示「待初始化」。 */
+function statusCard(p) {
+  const anchor = p.care && p.care.started;
+  const next = p.followups.find(f => !f.done);
+  if (!anchor) {
+    return `<section class="status-card" aria-label="病程状态卡 · 待初始化">
+      <div class="status-card-main">
+        <span class="eyebrow">D+N 状态卡 · 待初始化</span>
+        <div class="status-day"><b class="status-day-num">待初始化</b></div>
+        <p class="status-now">还没有可用的治疗起点（锚点日）。按三步完成初始化：① 上传资料 → ② 核对候选 → ③ 确认治疗起点；确认后这里按天自动派生，不手填。</p>
+      </div>
+      <div class="status-card-actions">
+        <button class="primary" data-action="go" data-target="records">去上传资料 →</button>
+        <button data-primer-open>疾病概要：肛管癌是什么？</button>
+      </div>
+    </section>`;
+  }
+  const n = daysBetween(anchor, D.window.to) + 1;
+  const hasN = Number.isFinite(n);
+  const st = p.care.ended ? '已结束 · 随访期' : '进行中';
+  const nextLine = next ? `下次：${cnDate(next.planned)}（${esc(next.type)}）` : '下次：未安排';
+  const ostomy = /APR|造口/.test((p.care.path || '') + (p.care.surgery || ''));
+  const target = ostomy ? 'life' : 'toxicity';
+  const mainLabel = ostomy ? '看造口与生活 →' : '看肛周皮肤与症状 →';
+  return `<section class="status-card" aria-label="病程状态卡">
+    <div class="status-card-main">
+      <span class="eyebrow">D${hasN ? n : '+N'} 状态卡 · 距 ${next ? esc(next.type) : '下次复查'}</span>
+      <div class="status-day"><b class="status-day-num">${hasN ? `第 ${n} 天` : '待初始化'}</b><span class="status-day-since">按当前治疗线起点 ${cnDate(anchor)} 起算 · 至 ${cnDate(D.window.to)}</span></div>
+      <p class="status-now"><b>${esc(p.care.path)}</b> · ${st} · ${nextLine}</p>
+    </div>
+    <div class="status-card-actions">
+      <button class="primary" data-action="go" data-target="${target}">${mainLabel}</button>
+      <button data-primer-open>疾病概要：肛管癌是什么？</button>
+    </div>
+  </section>`;
+}
+
 /* 1. 看板 */
 views.dashboard = (p) => {
   const primaryCat = p.metrics.find(m => defOf(m.key).kind === 'categorical');
@@ -276,6 +314,7 @@ views.dashboard = (p) => {
   const next = p.followups.find(f => !f.done);
   const openQ = p.questions.filter(q => q.status === 'open');
   return `
+  ${statusCard(p)}
   <section class="hero">
     <div>
       <span class="eyebrow">${cnDate(D.window.from)} — ${cnDate(D.window.to)}</span>

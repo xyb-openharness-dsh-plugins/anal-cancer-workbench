@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## 0.2.1 — 2026-10-27（36 号 v2 补齐：指南可点 + 状态卡）
+
+按 starter `prompts/PRIMER-BACKFILL.md` 与 `docs/36-DISEASE-PRIMER.md` §2.1 / §2.5 / §2.6 补齐。
+
+### 变更
+
+- 模式三件套同步到 starter 2026-10-27 链接版：`prototypes/v0.2/primer.js` / `primer.css`；
+  并在 `public/` 新增同版 `primer.js` / `primer.css` / `primer-data.js`（开发版顶栏「?」可打开）。
+- `primer-data.js`（原型与 `public/` 同源）：
+  - evidence 表 4 行「原件」列由纯文字改为 `{ text, url }` 可点对象；
+  - 8 条 sources 按 §2.5 补 `url` / `secondaryUrl`（对外链接 5 个，去重后全部实测 OK）；
+  - 项目内文档（SPEC / CLINICAL-DATA-2026）3 条显式 `nolink: true` + `note`，不伪造外链。
+- 看板首卡新增 §2.6 病程状态卡四件：卡头 eyebrow（`D+N 状态卡 · 距…`）／锚点派生大字天数
+  （按 `care.started` 起算，不手填；无锚点显示「待初始化」并指向三步初始化）／现状行
+  （阶段原文 + 状态 + 下次日期与事项）／出口按钮排（主按钮进当前阶段核心页 + 副按钮打开疾病概要）。
+  原型与开发版视图逐字符同步（ui-parity 78 组合全过）。
+- `scripts/check-primer-links.mjs`：L1–L6 通用链接断言；`npm run check` 末尾追加该检查。
+
+### 链接（未取得原件，均据二次来源）
+
+- NCCN · Anal Carcinoma 指南页 — `https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1414` — OK
+- CSCO · 指南页（2025 版）— `https://meeting.csco.org.cn/enterprise/onlineshowproductinfo?pid=263` — OK
+- ESMO · Anal Cancer CPG 页 — `https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/anal-cancer` — OK
+- AJCC / FACS — `https://www.facs.org/quality-programs/cancer-programs/american-joint-committee-on-cancer/` — OK
+- ClinicalTrials.gov 检索入口 — `https://clinicaltrials.gov/search?cond=anal%20cancer&aggFilters=studyType:int` — OK
+
+未取得项：NCCN / CSCO / ESMO 2026 版与 AJCC 第 8 版原件均未取得（只链官方/学会页，页码待核）；
+CSCO 所链为其官方 2025 版页，2026 版状态仍记为「未核验」。项目内文档 3 条无外网链接（nolink）。
+
 ## 0.2.0 — 2026-10-21（阶段 3.2：开发版）
 
 G2 确认后进入开发版：一份前端、两种挂载、接口取数，视图代码与原型逐字符对齐。
