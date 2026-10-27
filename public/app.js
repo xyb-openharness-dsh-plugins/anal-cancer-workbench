@@ -1,5 +1,5 @@
 'use strict';
-/* 小萌宝 AnalPal v0.2.8 — 肛管癌工作台开发版（阶段 3.2）。
+/* 小萌宝 AnalPal v0.2.9 — 肛管癌工作台开发版（阶段 3.2）。
    与原型 prototypes/v0.2/app.js 共用同一份视图代码，只有数据入口不同：
    原型读 demo-data.js 静态夹具，本文件走 /api/anal-cancer/bootstrap。
    患者资料为模拟夹具（dsh/demo-data.json，meta.source = "demo-fixture"）；临床试验为登记摘录（状态未核实）。
@@ -12,7 +12,7 @@
    4. 「心理支持」独立成页（2026-10-21 用户确认）：自评记录 + 病友与家属 + 求助路径，不做诊断；
    5. 一图秀默认体重 + 白蛋白两条数值线 + 肛周皮肤 RTOG 分级（分类序列只画节点不连线）。 */
 
-const APP_INFO = { version: '0.2.8', build: '2026-10-27', channel: 'dev' };
+const APP_INFO = { version: '0.2.9', build: '2026-10-27', channel: 'dev' };
 let D = null;
 let T = null;
 /* 开发版：UI 由 /api/anal-cancer/ui/ 提供，接口基址按自身路径推出来；
