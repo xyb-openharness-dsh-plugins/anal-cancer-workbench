@@ -35,6 +35,13 @@ const proto = readFileSync(join(root, 'prototypes/v0.2/app.js'), 'utf8').match(/
 if (!proto) problems.push('prototypes/v0.2/app.js 找不到 APP_INFO.version')
 else if (proto[1] !== FROZEN_PROTOTYPE) problems.push(`原型=${proto[1]}，应为冻结版本 ${FROZEN_PROTOTYPE}`)
 
+/* 开发版首页不许写死版本号：0.2.4 装机后顶栏是静态 v0.1.1，用户第一眼看到错版本
+ * （2026-10-27 反馈）。三处版本（顶栏/页脚/关于）与构建日期一律由 public/app.js 读 APP_INFO 渲染。 */
+const webIndex = readFileSync(join(root, 'public/index.html'), 'utf8')
+const hardcoded = [...webIndex.matchAll(/v(\d+\.\d+\.\d+)/g)].map((m) => m[1])
+if (hardcoded.length) problems.push(`public/index.html 写死了版本号 ${[...new Set(hardcoded)].join(', ')}；应由 APP_INFO 渲染`)
+if (!/id="runtime-line"/.test(webIndex)) problems.push('public/index.html 缺少 #runtime-line（顶栏版本行，运行时注入）')
+
 const readme = readFileSync(join(root, 'README.md'), 'utf8')
 if (!readme.includes(version)) problems.push(`README.md 未出现版本号 ${version}`)
 

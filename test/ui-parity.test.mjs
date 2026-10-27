@@ -115,26 +115,22 @@ test('原型与开发版：13 视图 × 2 档案 × 全部二级页签逐字符�
   console.log(`  parity 比对 ${compared} 个 (视图, 档案, 二级页) 组合，全部一致`)
 })
 
-test('面板参数唯一来源与客户端字面量副本一致', () => {
-  const layout = read(path.join(ROOT, 'lib', 'layout.js'))
+test('面板参数唯一来源：lib/layout.js 的 PANEL 与生成的 client.js 一致', async () => {
+  const layout = await import(path.join(ROOT, 'lib', 'layout.js'))
+  assert.equal(layout.PANEL.businessSide, 'left')
+  assert.equal(layout.PANEL.businessWidth, 0.65)
+  assert.equal(layout.PANEL.customFrame, true, 'customFrame=false 时宿主自己画会话区（2026-10-27 实机反馈）')
+  assert.deepEqual(layout.assertPanelConfig(), [], 'lib/layout.js 自身校验应无问题')
+
+  // lib/client.js 是 src/client.js 的生成物，参数由 build-client 注入；这里只验产物没漂
   const client = read(path.join(ROOT, 'lib', 'client.js'))
-  // lib/layout.js 是常量声明（BUSINESS_SIDE = 'left'）
   for (const [name, re] of [
-    ['BUSINESS_SIDE', /BUSINESS_SIDE = 'left'/],
-    ['BUSINESS_WIDTH', /BUSINESS_WIDTH = 0\.65/],
-    ['CUSTOM_FRAME', /CUSTOM_FRAME = false/],
-  ]) {
-    assert.match(layout, re, `lib/layout.js 缺少 ${name}`)
-  }
-  assert.match(layout, /UI_PREFIX = '\/api\/anal-cancer\/ui'/, 'lib/layout.js 的 UI_PREFIX 不对')
-  // lib/client.js 是宿主要求的字面量副本（对象键 businessSide: 'left'）
-  for (const [name, re] of [
-    ['businessSide', /businessSide:\s*'left'/],
-    ['businessWidth', /businessWidth:\s*0\.65/],
-    ['customFrame', /customFrame:\s*false/],
+    ['BUSINESS_SIDE', /const BUSINESS_SIDE = 'left'/],
+    ['BUSINESS_WIDTH', /const BUSINESS_WIDTH = Number\('0\.65'\)/],
+    ['CUSTOM_FRAME', /const CUSTOM_FRAME = 'true' === 'true'/],
+    ['UI_ENTRY', /const UI_ENTRY = '\/api\/anal-cancer\/ui\/'/],
   ]) {
     assert.match(client, re, `lib/client.js 与 layout 不一致：${name}`)
   }
   assert.match(client, /__ModuleLoader__\.load/, 'lib/client.js 必须用 ModuleLoader 注册')
-  assert.match(client, /\/api\/anal-cancer\/ui\/index\.html/, '客户端 iframe 地址不一致')
 })

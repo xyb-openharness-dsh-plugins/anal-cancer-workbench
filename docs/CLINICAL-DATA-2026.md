@@ -98,6 +98,7 @@ NCI 20、AIDS Malignancy Consortium 10、M.D. Anderson 6、CHU Besançon 6、UCS
 | 机构 | 文件与版本 | 原件状态 | 链接 |
 | --- | --- | --- | --- |
 | NCCN | Anal Carcinoma **V2.2026**（患者版据该版改编） | **已取得**：官方患者版 PDF，43 页，可直接下载 | `https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf` |
+| NCCN（临床版） | NCCN Guidelines · Anal Carcinoma **V2.2026** | **未取得**：全文需在 NCCN 官网注册后取得；官方入口可点，本台不据其条文 | `https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1414` |
 | CACA | 中国肿瘤整合诊治指南·肛管癌 **V1.0_2022**（2022-03-31，大肠癌专业委员会） | **已取得**：官网在线全文，逐页可读；下载需登录 | `https://cacaguidelines.cacakp.com/pdflist/detail?id=37` |
 | ESMO | Anal cancer CPG **2021**（Ann Oncol 2021;32:1087-1100） | **已取得**：官方指南页可开；全文页 annalsofoncology.org 对脚本返回 403，浏览器可开 | `https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-anal-cancer` |
 | CSCO | 结直肠癌诊疗指南 2025（**肛管癌未单独成册**） | **无原件**：2025 版合订本目录无肛管癌独立指南，亦无官方免费在线全文 | — |

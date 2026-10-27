@@ -3,8 +3,9 @@
  * 只做三件事：挂 /api/anal-cancer 前缀下的 health、bootstrap、/ui/* 静态页；
  * 所有请求先过宿主的鉴权回执，不自建登录态。
  *
- * UI 走 iframe（标准分栏）：客户端入口只注册一个 iframe，页面与接口同源，
- * 所以「本地 dev-server」与「装进 Desktop」共用 public/ 那一份前端。
+ * UI 走 iframe（customFrame=true，业务区在左、原生会话在右）：客户端入口 lib/client.js
+ * 只画自绘顶栏 + 业务 iframe + 会话区，页面与接口同源，所以「本地 dev-server」与
+ * 「装进 Desktop」共用 public/ 那一份前端。
  */
 import Schema from '@deepseek-ai/schemastery'
 import { bootstrap } from './readmodels.js'

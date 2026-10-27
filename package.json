@@ -1,6 +1,6 @@
 {
   "name": "@xyb-community/anal-cancer-workbench",
-  "version": "0.2.2",
+  "version": "0.2.7",
   "description": "本机优先的肛管癌（肛管鳞癌）放化疗副作用、肠道与排粪功能、造口生活与复查准备工作台",
   "private": true,
   "type": "module",
@@ -25,6 +25,7 @@
   "scripts": {
     "start": "node scripts/dev-server.mjs",
     "build:version": "node scripts/build-version.mjs",
+    "build:client": "node scripts/build-client.mjs",
     "demo": "node demo/build-demo-data.mjs",
     "trials": "node scripts/fetch-anal-trials-2026.mjs",
     "trials:excerpt": "node scripts/build-trials-excerpt.mjs",
@@ -35,8 +36,9 @@
     "check:version": "node scripts/check-version.mjs",
     "check:package": "node scripts/check-workbench-package.mjs .",
     "check:primer-links": "node scripts/check-primer-links.mjs",
+    "check:primer-links:http": "node scripts/check-primer-links.mjs --http",
     "test": "node --disable-warning=ExperimentalWarning --test test/*.test.mjs",
-    "check": "node scripts/build-version.mjs --check && node scripts/check-syntax.mjs && node scripts/check-schema.mjs && node scripts/check-wording.mjs && node scripts/check-demo-columns.mjs && node --disable-warning=ExperimentalWarning --test test/*.test.mjs && node scripts/check-version.mjs && node scripts/check-workbench-package.mjs . && node scripts/check-primer-links.mjs",
+    "check": "node scripts/build-version.mjs --check && node scripts/build-client.mjs --check && node scripts/check-syntax.mjs && node scripts/check-schema.mjs && node scripts/check-wording.mjs && node scripts/check-demo-columns.mjs && node --disable-warning=ExperimentalWarning --test test/*.test.mjs && node scripts/check-version.mjs && node scripts/check-workbench-package.mjs . && node scripts/check-primer-links.mjs",
     "pack:check": "npm pack --dry-run",
     "probe:primer": "node scripts/probe-disease-primer.mjs"
   },

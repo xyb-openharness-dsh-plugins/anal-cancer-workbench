@@ -1,5 +1,5 @@
 'use strict';
-/* 小萌宝 AnalPal v0.2.2 — 肛管癌工作台开发版（阶段 3.2）。
+/* 小萌宝 AnalPal v0.2.7 — 肛管癌工作台开发版（阶段 3.2）。
    与原型 prototypes/v0.2/app.js 共用同一份视图代码，只有数据入口不同：
    原型读 demo-data.js 静态夹具，本文件走 /api/anal-cancer/bootstrap。
    患者资料为模拟夹具（dsh/demo-data.json，meta.source = "demo-fixture"）；临床试验为登记摘录（状态未核实）。
@@ -12,7 +12,7 @@
    4. 「心理支持」独立成页（2026-10-21 用户确认）：自评记录 + 病友与家属 + 求助路径，不做诊断；
    5. 一图秀默认体重 + 白蛋白两条数值线 + 肛周皮肤 RTOG 分级（分类序列只画节点不连线）。 */
 
-const APP_INFO = { version: '0.2.2', build: '2026-10-27', channel: 'dev' };
+const APP_INFO = { version: '0.2.7', build: '2026-10-27', channel: 'dev' };
 let D = null;
 let T = null;
 /* 开发版：UI 由 /api/anal-cancer/ui/ 提供，接口基址按自身路径推出来；
@@ -159,6 +159,10 @@ function render() {
   $('#ver-chip').textContent = 'v' + APP_INFO.version;
   $('#app-version').textContent = 'v' + APP_INFO.version;
   $('#app-build').textContent = APP_INFO.build;
+  /* 顶栏那行『开发版 vX』也必须由 APP_INFO 渲染：0.2.4 装机后它是静态 v0.1.1，
+     用户截图第一眼看到的就是错版本（2026-10-27 反馈）。index.html 里不再写死版本号。 */
+  const runtimeVersion = document.querySelector('#runtime-line b');
+  if (runtimeVersion) runtimeVersion.textContent = '开发版 v' + APP_INFO.version;
   $('#main').innerHTML = `<div class="page-enter">${pageHead()}<div class="page-body">${views[state.view](p, sub)}</div>${footerNote()}</div>`;
   document.body.classList.toggle('large', state.large);
   $('#font-toggle').setAttribute('aria-pressed', String(state.large));
@@ -167,7 +171,10 @@ function render() {
   $('#work-grid').classList.toggle('agent-open', state.agent);
   $('#work-grid').classList.toggle('agent-wide', state.agentSize === 'wide');
   $('#agent-toggle').setAttribute('aria-expanded', String(state.agent));
-  $('#agent-state').textContent = state.agent ? '已打开' : '未进入激活';
+  /* 嵌在 DSH 面板里时，AI 会话是宿主原生会话："未进入激活"这种原型口径会让人以为功能没接。
+     面板里改为「点此打开 / 已打开」，状态由外壳回传（anal:agent-state）。 */
+  const embedded = window.self !== window.top;
+  $('#agent-state').textContent = state.agent ? '已打开' : (embedded ? '点此打开' : '未进入激活');
   $$('#agent-toggle i')[0]?.classList.toggle('grey', !state.agent);
   renderAgent();
   attachChartHover();
@@ -1001,6 +1008,15 @@ document.addEventListener('click', (e) => {
 
   if (act === 'go') { state.view = el.dataset.target; state.sub = 0; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   if (act === 'agent') {
+    /* 装进 DSH 面板时（customFrame），AI 会话是宿主原生会话，页面自己开不出来。
+       这里把点击转成一条消息交给外壳，由 lib/client.js 调起/收起原生会话；
+       独立浏览器打开时仍走本页的演示用 dock，不假装接了模型。 */
+    if (window.self !== window.top) {
+      try { window.parent.postMessage({ type: 'anal:open-agent' }, window.location.origin) } catch { /* 跨域时静默 */ }
+      state.agent = true;
+      render();
+      return;
+    }
     state.agent = !state.agent;
     if (state.agent) $('#agent-dot')?.classList.add('on');
     render(); return;
@@ -1059,6 +1075,18 @@ document.addEventListener('keydown', (e) => {
 });
 
 $('#font-toggle').addEventListener('click', () => { state.large = !state.large; render(); });
+
+/* 外壳（lib/client.js）在会话区开合时回传状态，页面这颗 pill 才对得上。
+   只认同源消息，且必须来自 parent。 */
+window.addEventListener('message', (event) => {
+  if (event.source !== window.parent) return;
+  if (event.origin !== window.location.origin) return;
+  const data = event.data;
+  if (!data || data.type !== 'anal:agent-state') return;
+  state.agent = Boolean(data.open);
+  render();
+});
+
 $('#dialog').addEventListener('click', (e) => { if (e.target.id === 'dialog') e.currentTarget.close(); });
 
 /* ---------------- utils ---------------- */

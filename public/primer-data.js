@@ -42,25 +42,27 @@ window.DISEASE_PRIMER = {
       table: {
         head: ['机构', '文件', '版本 / 年份', '原件', '本台的用途'],
         rows: [
-          ['NCCN', 'NCCN Guidelines for Patients · Anal Cancer', 'V2.2026（患者版据该版改编，43 页）', { text: '已取得：官方患者版 PDF', url: 'https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf' }, '分期检查、放化疗与随访路径的并列引用；患者版页码可点回'],
-          ['CACA', '中国肿瘤整合诊治指南（CACA）· 肛管癌', 'V1.0_2022（2022-03-31，大肠癌专业委员会）', { text: '已取得：官网在线全文（下载需登录）', url: 'https://cacaguidelines.cacakp.com/pdflist/detail?id=37' }, '国内路径与中文表述对照；本台引用的是 2022 版'],
-          ['ESMO', 'Anal cancer: ESMO Clinical Practice Guideline', '2021（Ann Oncol 2021;32:1087-1100）；是否有更新版未核验', { text: '已取得：ESMO 官方指南页（全文在 Annals of Oncology）', url: 'https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-anal-cancer' }, '欧洲口径的并列参照'],
+          ['NCCN', 'NCCN Guidelines for Patients · Anal Cancer', 'V2.2026（患者版据该版改编，43 页）', { text: '已取得：官方患者版 PDF', kind: 'pdf', url: 'https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf' }, '分期检查、放化疗与随访路径的并列引用；患者版页码可点回'],
+          ['NCCN', 'NCCN Guidelines · Anal Carcinoma（临床版）', 'V2.2026', { text: '官方入口 · 需自行注册', kind: 'hub', note: '临床版全文需在 NCCN 官网注册后取得；本台未取得该版原件', url: 'https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1414' }, '剂量、疗程与条目级页码的出处；以注册后的临床版原文为准'],
+          ['CACA', '中国肿瘤整合诊治指南（CACA）· 肛管癌', 'V1.0_2022（2022-03-31，大肠癌专业委员会）', { text: '已取得：官网在线全文（下载需登录）', kind: 'fulltext', url: 'https://cacaguidelines.cacakp.com/pdflist/detail?id=37' }, '国内路径与中文表述对照；本台引用的是 2022 版'],
+          ['ESMO', 'Anal cancer: ESMO Clinical Practice Guideline', '2021（Ann Oncol 2021;32:1087-1100）；是否有更新版未核验', { text: '已取得：期刊全文页（Ann Oncol 2021）', kind: 'fulltext', url: 'https://www.annalsofoncology.org/article/S0923-7534(21)02064-0/fulltext' }, '欧洲口径的并列参照'],
           ['CSCO', 'CSCO 结直肠癌诊疗指南（肛管癌未单独成册）', '2025 版合订本', { text: '未单独成册 · 无官方免费全文', nolink: true, note: '2025 版合订本目录无肛管癌独立指南，条目散见结直肠癌指南内；本台不引用其条文' }, '国内可及药物与本土实践差异；本版暂不作引用依据'],
-          ['AJCC', 'Cancer Staging Manual, 8th ed.（肛管章节）', '第 8 版', { text: '官方免费部分：第 1 章分期总则 PDF', url: 'https://www.facs.org/media/2zvlrdmi/ajcc_staging_rules_8th_ed.pdf' }, 'TNM 分期与区域淋巴结口径；项目界面只显示医生给出的分期原文']
+          ['AJCC', 'Cancer Staging Manual, 8th ed.（肛管章节）', '第 8 版', { text: '官方免费部分：第 1 章分期总则 PDF', kind: 'pdf', url: 'https://www.facs.org/media/2zvlrdmi/ajcc_staging_rules_8th_ed.pdf' }, 'TNM 分期与区域淋巴结口径；项目界面只显示医生给出的分期原文']
         ]
       },
       points: [
         '指南给的是「通常怎么做」，不是「你该怎么做」。版本号必须写清：同一份指南隔一年，条目会变。',
-        'NCCN 一行链到的是患者版（NCCN Guidelines for Patients），不是临床版全文；临床版（NCCN Guidelines · Anal Carcinoma）需在 NCCN 官网注册订阅，本台未取得，故不据其条文。',
+        'NCCN 占两行：一行是患者版 PDF（NCCN Guidelines for Patients，43 页，可直接下载，据 V2.2026 改编），一行是临床版入口（NCCN Guidelines · Anal Carcinoma，全文需在 NCCN 官网注册后取得）。本台未取得临床版原件，条目级页码以注册后的原文为准。',
         'CACA 一行为中国抗癌协会官网的在线全文（逐页可读），下载需登录；本台引用的是 V1.0_2022 版。',
         'CSCO 未单列肛管癌指南——2025 版合订本目录里只有结直肠癌诊疗指南；本台不引用其条文，也不把 2026 版状态写成已核验。',
         'AJCC 第 8 版手册为付费出版物，官方只免费公开第 1 章分期总则；肛管章节本身未取得，页码一律写待核。',
         '临床研究条目来自 ClinicalTrials.gov 登记摘录，状态与最近更新日期逐条显示，不把「看起来在招」当成机会。'
       ],
       sources: [
-        { org: 'NCCN', doc: 'NCCN Guidelines for Patients · Anal Cancer', version: 'V2.2026（患者版）', original: true, url: 'https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf', note: '官方患者版 PDF，43 页，可直接下载' },
-        { org: 'CACA', doc: '中国肿瘤整合诊治指南（CACA）· 肛管癌', version: 'V1.0_2022', original: true, url: 'https://cacaguidelines.cacakp.com/pdflist/detail?id=37', note: '官网在线全文，逐页可读；下载需登录' },
-        { org: 'ESMO', doc: 'Anal cancer: ESMO Clinical Practice Guideline', version: '2021（Ann Oncol 32:1087-1100）', original: true, url: 'https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-anal-cancer', note: '全文在 annalsofoncology.org，该站对脚本访问返回 403，浏览器可直接打开' },
+        { org: 'NCCN', doc: 'NCCN Guidelines for Patients · Anal Cancer', version: 'V2.2026（患者版）', original: true, kind: 'pdf', url: 'https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf', note: '官方患者版 PDF，43 页，可直接下载' },
+        { org: 'NCCN', doc: 'NCCN Guidelines · Anal Carcinoma（临床版）', version: 'V2.2026', entry: true, kind: 'hub', url: 'https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1414', note: '临床版全文需在 NCCN 官网注册后取得；本台未取得该版原件' },
+        { org: 'CACA', doc: '中国肿瘤整合诊治指南（CACA）· 肛管癌', version: 'V1.0_2022', original: true, kind: 'fulltext', url: 'https://cacaguidelines.cacakp.com/pdflist/detail?id=37', note: '官网在线全文，逐页可读；下载需登录' },
+        { org: 'ESMO', doc: 'Anal cancer: ESMO Clinical Practice Guideline', version: '2021（Ann Oncol 32:1087-1100）', original: true, kind: 'fulltext', url: 'https://www.annalsofoncology.org/article/S0923-7534(21)02064-0/fulltext', note: '期刊全文页；该站对脚本访问返回 403（反爬），浏览器可直接打开。ESMO 官方入口 esmo.org/guidelines/esmo-clinical-practice-guideline-anal-cancer' },
         { org: 'CSCO', doc: 'CSCO 结直肠癌诊疗指南（肛管癌未单独成册）', version: '2025 版', original: true, nolink: true, note: 'CSCO 无独立肛管癌指南，也无官方免费在线全文，故不设链接' },
         { org: 'AJCC', doc: 'Cancer Staging Manual, 8th ed.（肛管章节）', version: '第 8 版', original: false, page: '页码待核', secondaryUrl: 'https://www.facs.org/media/2zvlrdmi/ajcc_staging_rules_8th_ed.pdf', note: '官方免费公开为第 1 章分期总则；肛管章节在付费手册内' }
       ]
@@ -99,7 +101,7 @@ window.DISEASE_PRIMER = {
         '以上是文献与指南里列出的手段，按病期与线序排列，不代表任何一项适合你。选哪一个，这一句需要问你的医生。'
       ],
       sources: [
-        { org: 'NCCN', doc: 'NCCN Guidelines for Patients · Anal Cancer', version: 'V2.2026（患者版）', original: true, url: 'https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf', note: '手段类别的对照来源' },
+        { org: 'NCCN', doc: 'NCCN Guidelines for Patients · Anal Cancer', version: 'V2.2026（患者版）', original: true, kind: 'pdf', url: 'https://www.nccn.org/patients/guidelines/content/PDF/anal-patient.pdf', note: '手段类别的对照来源' },
         { org: '本项目', doc: 'docs/SPEC.md（人群与治疗段落、放化疗方案写法）', version: '2026-10-21 版', original: true, nolink: true, note: '项目内文档，随仓提供，无外网链接' }
       ]
     },
@@ -116,7 +118,7 @@ window.DISEASE_PRIMER = {
       ],
       sources: [
         { org: '本项目', doc: 'docs/CLINICAL-DATA-2026.md（224 条快照、状态与分期分布、指南监测入口）', version: '快照 2026-10-21，指南核对 2026-10-27', original: true, nolink: true, note: '项目内文档，随仓提供，无外网链接' },
-        { org: 'ClinicalTrials.gov', doc: 'API v2 检索（anal cancer / anal squamous cell carcinoma / anal canal carcinoma）', version: '采集日 2026-10-21', original: true, url: 'https://clinicaltrials.gov/search?cond=anal%20cancer&aggFilters=studyType:int', note: '一手登记数据，本项目自采；链接为同条件在线检索入口' },
+        { org: 'ClinicalTrials.gov', doc: 'API v2 检索（anal cancer / anal squamous cell carcinoma / anal canal carcinoma）', version: '采集日 2026-10-21', original: true, kind: 'registry', url: 'https://clinicaltrials.gov/search?cond=anal%20cancer&aggFilters=studyType:int', note: '一手登记数据，本项目自采；链接为同条件在线检索入口' },
         { org: 'AJCC', doc: 'Cancer Staging Manual, 8th ed.', version: '第 8 版', original: false, page: '页码待核', secondaryUrl: 'https://www.facs.org/media/2zvlrdmi/ajcc_staging_rules_8th_ed.pdf', note: '官方免费公开为第 1 章分期总则' }
       ]
     }

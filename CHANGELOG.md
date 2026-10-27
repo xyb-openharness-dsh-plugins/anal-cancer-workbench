@@ -1,5 +1,149 @@
 # CHANGELOG
 
+## 0.2.7 — 2026-10-27（customFrame 实机复核：空白会话区 + 页签被裁）
+
+用户在 0.2.5 上截图确认「可以打开了」——frame header 与右侧「收起 AI 对话」都出来了，
+customFrame 生效。截图同时暴露两个真问题：
+
+### ① 右侧一块空白白板（真 bug）
+
+`hasConversation` 原来写成 `Boolean(conversation)`。宿主在**本工作台 active 时恒传非空的
+`conversation` 节点**（一个 display:none 的容器），所以这个判据永远为真：右侧永远挂一块空白板，
+顶栏永远写「收起 AI 对话」，明明一个会话都没有。
+
+- 改为按**会话归属**判定：`currentSession()` + `ownsSession(id)`；
+- `desktopWorkbenches.subscribe` 回调里 `setSessionTick(+1)`，新会话建立/切换后重算；
+- `test/client.test.mjs` ④ 加回归用例：`conversation` 非空但无归属 → `aside` 必须 display:none。
+
+### ② 一级页签被裁掉（真 bug）
+
+`@media(max-width:900px)` 把 `#nav` 改成 `flex-direction:row; overflow-x:auto`。customFrame 下业务区
+常是窗口的 65%（1080 → 700px），8 个页签单行放不下（实测 `scrollWidth 1468 / clientWidth 668`），
+而 macOS 覆盖式滚动条不滚就不显示——右侧「肛周皮肤」等页签看着像被裁、也点不到。
+
+- 改成 `flex-wrap: wrap`：936/820/700/620 四档实测 `scrollWidth == clientWidth`，`body.scrollWidth == innerWidth`，无横向溢出。
+
+### ③ 页面顶栏那颗「AI 对话」pill 口径不对
+
+嵌在面板里时它显示「未进入激活」，像没接上。改为「点此打开 / 已打开」，
+状态由外壳 postMessage `anal:agent-state` 回告（只认 parent + 同源）。
+
+### 验证
+
+`npm run check` 全绿；`client.test.mjs` 4/4（含新回归）；936/820/700/620 四档无横向溢出。
+**frame header 的真实渲染仍只能在 Desktop 里看**——本机无 react/react-dom，渲染不了。
+
+## 0.2.6 — 2026-10-27（把「AI 对话」入口接到页面顶栏 + 品牌图标）
+
+用户装 0.2.5 后反馈：**「topbar 没有 ai 对话按钮」**。
+
+### 变更
+
+- **页面顶栏那颗「AI 对话」按钮原来是死的**：`data-action="agent"` 只切换本页的演示 dock
+  （`#agent-dock`，点「整理本页要点」只 toast「原型不调用模型」），在 DSH 面板里既开不出原生会话，
+  也没有任何提示。现在：`window.self !== window.top` 时 postMessage `{type:'anal:open-agent'}` 给外壳，
+  由 `lib/client.js` 调起/收起原生会话；独立浏览器打开仍走演示 dock，不假装接了模型。
+- `src/client.js` 接收 `anal:open-agent`：先验 `event.source === iframe.contentWindow` 与同源，
+  再按 `currentSession()`/`ownsSession()` 决定是"打开已有会话"还是 `ensureSession` 新开。
+  用 ref 持有 handler，避免闭包停在首帧的 `hasConversation`/`canOpenSession`。
+- 品牌图标：`🪷`（小莲宝的莲花）→ `🧡`，header 与 register 两处。
+- 版本 0.2.5 → 0.2.6（同时用来让宿主按新版本重新读取客户端，排除旧构建缓存）。
+
+### 仍未证实的
+
+0.2.5 的 frame header（含右侧「AI 对话 / 收起 AI 对话」按钮）**是否真的画出来了，本地无法验证**——
+宿主 renderer 内置 React，本机没有可复用的 react/react-dom，`test/client.test.mjs` 只能验入口契约与
+组件树结构（4/4 过），验不了"在 Desktop 里长什么样"。用户在 0.2.5 上说没有按钮，两条可能：
+① 应用没完全退出重开，加载的还是 0.2.4 的 client.js；② customFrame 生效但 header 被外层容器压掉。
+本版把入口同时挂到页面顶栏，①和②都有一条可用路径。
+
+## 0.2.5 — 2026-10-27（装机后两个实机缺陷：版本号 + 面板形态）
+
+用户装 0.2.4 后截图反馈：**「这个 tar 包有 bug 吧，版本号也不对，是不是没装对，而且中间是工作台位置，
+右边是拉起 ai 对话框」**。两条都是真缺陷，都不是"没装对"。
+
+### ① 版本号显示 v0.1.1（真 bug）
+
+`public/index.html` 把 `开发版 v0.1.1` 写死在顶栏 `.prototype-bar` 里，`public/app.js` 只重写了
+`#ver-chip` 与页脚 `#app-version`，没管那一行——`scripts/check-version.mjs` 也从不读 index.html，
+于是 0.2.1→0.2.4 一路绿着漏过去。
+
+- `public/index.html`：标题 / 顶栏 / 版本 chip / 页脚四处**一律不写版本号**（占位 `v—`），
+  顶栏加 `id="runtime-line"`。
+- `public/app.js`：由 `APP_INFO.version` 渲染 `#runtime-line b`。
+- `scripts/check-version.mjs`：新增断言——`public/index.html` 出现任何 `vX.Y.Z` 字面量即失败；
+  且必须存在 `#runtime-line`。同类错误不能再靠肉眼发现。
+
+### ② 面板形态不对（真 bug）：标准分栏 → customFrame
+
+原来 `lib/layout.js` 的 `CUSTOM_FRAME = false`。标准分栏下宿主自己画会话区：业务区被拉满、
+顶栏没有 AI 按钮、右侧会话区不可调，**中间那块本该是工作台的位置被原生会话占着**。
+与乳腺癌（PinkyPal）、小莲宝（CerviPal）、小胆宝（BiliPal）三家不一致。
+
+- `lib/layout.js` 改为 starter 形状：`PANEL`（left / 0.65 / **customFrame: true**）、`HOST_LIMITS`、
+  `AGENT_PANE`（0.25–0.45，默认 0.35）、`clampAgentRatio`、`businessPanePx`、`assertPanelConfig`。
+- 新增 `src/client.js` + `scripts/build-client.mjs`：客户端改为**生成物**，包名 / 仓库 / 接口前缀 /
+  版本号 / 面板参数全部在构建期注入，`npm run check` 里跑 `--check` 防漂移。
+- `lib/client.js` 由裸 iframe 换成自绘：语义 `<header>`（避让 `--dsh-frame-leading-clearance`、
+  品牌 + 版本 + AI 对话按钮）→ 业务 iframe → 会话 `<aside>` → 可拖 splitter（`role="separator"`、
+  键盘 ←/→、0.25–0.45、窄于 760px 转抽屉）。三条硬约束：会话区**始终挂载**只切 `display`；
+  无会话时业务照常可用；会话归属只问 `currentSession()`/`ownsSession()`，不拿 `conversation` 判空。
+- 新增 `test/client.test.mjs`（4 条）：非 ESM / 只依赖 react / register 参数 / Panel 结构。
+- `test/ui-parity.test.mjs` 的面板参数断言改写为读 `PANEL` + 校验生成物。
+- 配色换成本项目主色：#EE7B1E 主按钮、#FCF9F5 底、#8A4B12 品牌字（原来是青绿 #18AFA5）。
+
+### 验证
+
+`npm run check` 全链绿（含 `build-client --check`）、单测 `client.test.mjs` 4/4、链接断言 28/28。
+
+## 0.2.4 — 2026-10-27（NCCN 两条都要：患者版 PDF + 临床版入口）
+
+用户原话：「**nccn 的两个都要，患者版pdf+指南页面（患者自己去注册）**」。
+0.2.3 只留了患者版 PDF，把临床版从表里挤掉了——用户想知道临床版在哪，自己去注册。
+
+### 变更
+
+- evidence 表由 5 行改 6 行，NCCN 占两行：
+  | 行 | 原件列 | 说明 |
+  | --- | --- | --- |
+  | NCCN 患者版 | `{ kind: 'pdf', url: …anal-patient.pdf }` → 「已取得：官方患者版 PDF」 | 43 页，直接下载 |
+  | NCCN 临床版 | `{ kind: 'hub', entry 语义, url: …guidelines-detail?category=1&id=1414 }` → 「官方入口 · 需自行注册」 | 全文需在 NCCN 官网注册后取得，本台未取得 |
+- 新增第三种来源状态 **`entry: true`**（官方入口页，读者须自行注册）：渲染「官方入口 ↗ 需自行注册」，
+  必须带 `note`，不得写「已取得」。模式层 `primer.js` 与 starter `assets/patterns/disease-primer.js` 同步。
+- `scripts/check-primer-links.mjs` 换为 starter 1.10.0-rc.3 版：新增 **L12**（`entry` 缺 note／缺 https；
+  表格里 `kind: 'hub'` 却写「已取得」判入口页冒充原件），`--self-test` 由 8 条增至 10 条。
+- `docs/CLINICAL-DATA-2026.md` 原件核对表新增「NCCN（临床版）」一行，标「未取得 · 需注册」。
+
+### 验证
+
+- 结构断言 **29 项 / 28 通过 / 0 失败**；`--self-test` **10/10**。
+- `--http`：NCCN 患者版 `application/pdf` 200；NCCN 临床版入口 200；ESMO 全文页 403（WARN，需人工确认）。
+- 探针 `--url prototypes/v0.2/index.html` 9/9。
+
+## 0.2.3 — 2026-10-27（闸门补齐：链接必须是文件本身）
+
+0.2.2 把原件找齐了，但闸门仍只验「有没有 https 链接」——**闸门本身没修，下一台还会犯同一个错**。
+本版把闸门升级为 starter 1.10.0-rc.2 版并回填 `kind`。
+
+### 变更
+
+- `scripts/check-primer-links.mjs` 换为 starter 新版：L7 原件必须声明 `kind`（`pdf`/`fulltext`/`registry`/`dataset`，
+  栏目页记 `hub` 且不得配 `original: true`）；L8 `kind: pdf` 必须像 PDF；L9 栏目页冒充原件直接判失败；
+  `--http` 增 L10（**`kind: pdf` 实测拿到 `text/html` = 登录页/反爬页冒充 PDF，判失败**）与 L11（404/410 失败；
+  403/429/5xx 报 WARN 且不计通过）。附 `--self-test` 8 条反向对照。
+- `primer-data.js`（原型与 `public/` 同源）13 处来源与 5 行表格补 `kind`：
+  NCCN `pdf`／CACA `fulltext`／ESMO `fulltext`／AJCC（二次来源）`pdf`／ClinicalTrials `registry`。
+- **ESMO 的 url 从 `esmo.org` 栏目页换成期刊全文页**（`annalsofoncology.org/article/S0923-7534(21)02064-0/fulltext`）——
+  原链接按新规则属 `hub`，不能算原件；该站对脚本 403，`--http` 报 WARN，浏览器可直接打开。
+- `package.json` 新增 `check:primer-links:http`。
+
+### 验证
+
+- `node scripts/check-primer-links.mjs`：26 项结构断言全过。
+- `node scripts/check-primer-links.mjs --http`：30 通过 / 0 失败 / **1 待人工确认**（ESMO 403 反爬）。
+  NCCN 患者版实测 `application/pdf`。
+- `node scripts/check-primer-links.mjs --self-test`：8/8（每条规则都能报 FAIL）。
+
 ## 0.2.2 — 2026-10-27（指南原件落实：不再用「未取得」交差）
 
 0.2.1 的 evidence 表 4 行全部写成「未取得原件，据二次来源」，链接指向的只是学会首页/指南详情页，
